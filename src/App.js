@@ -39,6 +39,10 @@ const router = createBrowserRouter([
                 path: "log-in",
                 element:  <PublicRoute component={LogIn}></PublicRoute>
             },
+            {
+                path: "",
+                element:  <PublicRoute component={LogIn}></PublicRoute>
+            },
 
             {
                 path: "register",
