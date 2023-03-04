@@ -10,7 +10,8 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import { Link } from "react-router-dom";
-
+import {useAuth} from "../contexts/AuthContext";
+import {useState} from 'react'
 
 const pages = ['Istoric devize', 'Crează deviz nou', 'Despre noi'];
 const links = {
@@ -22,16 +23,20 @@ function Navbar() {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-    const handleOpenNavMenu = (event) => {
-        setAnchorElNav(event.currentTarget);
-    };
+    const {currentUser, logOut} = useAuth()
+    const [error, setError] = useState('')
 
-    const handleCloseNavMenu = () => {
-        setAnchorElNav(null);
-    };
-
-
+    async function handleLogOut() {
+        setError('')
+        try{
+            await logOut()
+        } catch{
+            setError("Actiunea nu s-a putut efectua")
+        }
+    }
+    if (currentUser)
     return (
+
         <AppBar position="static">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
@@ -54,6 +59,7 @@ function Navbar() {
                     >
                         deviz.me
                     </Typography>
+
                     </Link>
                     <Box sx={{ flexGrow: 1, display: { xs: 'grid', md: 'flex' } }}>
                         {pages.map((page) => (
@@ -71,11 +77,24 @@ function Navbar() {
 
                         ))}
                     </Box>
+                    {
+                        currentUser && <Typography>
+                            {currentUser.email}
+                        </Typography>
+                    }
+                    {
+                        currentUser && <Button
+                        onClick = {handleLogOut}
 
-
+                        sx={{ my: 2, color: 'white', display: 'block' }}
+                    >
+                        Log Out
+                    </Button>
+                    }
                 </Toolbar>
             </Container>
         </AppBar>
     );
+    else return (<></>)
 }
 export default Navbar;

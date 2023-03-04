@@ -12,12 +12,12 @@ import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import ClientDetails from './ClientDetails';
-import CarDetails from './CarDetails';
-import ProblemsDescribedByClient from "./ProblemsDescribedByClient";
-import ProblemsFoundByService from "./ProblemsFoundByService";
+import ClientDetails from './estimateCreationForm/ClientDetails';
+import CarDetails from './estimateCreationForm/CarDetails';
+import ProblemsDescribedByClient from "./estimateCreationForm/ProblemsDescribedByClient";
+import ProblemsFoundByService from "./estimateCreationForm/ProblemsFoundByService";
 import {useRef, useState} from "react";
-import {db} from './firebase'
+import {db} from './estimateCreationForm/firebase'
 import {useEffect} from "react";
 import {collection, getDocs, doc, deleteDoc} from "@firebase/firestore";
 import DeleteIcon from "@mui/icons-material/Delete";

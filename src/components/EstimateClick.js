@@ -17,7 +17,7 @@ import Container from "@mui/material/Container";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {collection, deleteDoc, doc, getDocs} from "@firebase/firestore";
 import {useEffect, useState} from "react";
-import {db} from "./firebase";
+import {db} from "./estimateCreationForm/firebase";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;

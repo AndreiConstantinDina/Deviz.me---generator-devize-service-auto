@@ -1,15 +1,20 @@
 import './App.css';
-import SignIn from './components/SignIn.js';
-import SignUp from './components/SignUp.js';
-import Carbrand from './components/CarBrand';
-import Authentificate from "./components/Authentificate";
+
+import Carbrand from './components/estimateCreationForm/CarBrand';
 import DataFetch from "./components/DataFetch";
 import Navbar from "./components/Navbar";
-import CarEstimate from './components/CarEstimate'
+import CarEstimate from './components/estimateCreationForm/CarEstimate'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Estimates from './components/Estimates'
-import About from './components/About'
+import About from './components/about/About'
 import RootPage from "./components/RootPage";
+import LogIn from "./components/estimateCreationForm/LogIn";
+import Register from "./components/estimateCreationForm/Register";
+import {AuthProvider, useAuth} from "./contexts/AuthContext";
+import PrivateRoute from "./components/PrivateRoute";
+import PublicRoute from "./components/PublicRoute";
+import  secureLocalStorage  from  "react-secure-storage";
+import {useEffect} from "react";
 
 const router = createBrowserRouter([
     {
@@ -17,27 +22,47 @@ const router = createBrowserRouter([
         element: <RootPage />,
         children: [
             {
-                path: "/istoric-devize",
-                index: true,
-                element: <Estimates />,
+                path: "istoric-devize",
+                element: <PrivateRoute component={Estimates}></PrivateRoute>
             },
             {
-                path: "/creare-deviz",
-                element: <CarEstimate />,
+                path: "creare-deviz",
+                element:  <PrivateRoute component={CarEstimate}></PrivateRoute>
             },
 
             {
-                path: "/about",
-                element: <About />,
+                path: "about",
+                element:  <PrivateRoute component={About}></PrivateRoute>
             },
+
+            {
+                path: "log-in",
+                element:  <PublicRoute component={LogIn}></PublicRoute>
+            },
+
+            {
+                path: "register",
+                element:  <PublicRoute component={Register}></PublicRoute>
+            },
+
+
         ],
     },
 ]);
 
 function App() {
-    return <div>
-        <RouterProvider router={router} />
-    </div>
+    useEffect(() => {
+        secureLocalStorage.setItem("logged-in", false);
+
+    }, []);
+    return(
+        <AuthProvider>
+
+                <RouterProvider router={router} />
+        </AuthProvider>
+    )
+
+
 }
 
 export default App;
