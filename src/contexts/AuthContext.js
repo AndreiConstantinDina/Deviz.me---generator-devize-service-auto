@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react'
-import { auth } from '../components/estimateCreationForm/firebase'
-import LogIn from "../components/estimateCreationForm/LogIn";
-import Register from "../components/estimateCreationForm/Register";
+import { auth } from '../components/authentification/firebase'
+import LogIn from "../components/authentification/LogIn";
+import Register from "../components/authentification/Register";
 import  secureLocalStorage  from  "react-secure-storage";
 
 

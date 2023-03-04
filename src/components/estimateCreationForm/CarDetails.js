@@ -15,7 +15,7 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Box from "@mui/material/Box";
 
-export default function CarDetails({carData, setCarData}) {
+export default function CarDetails({carData, setCarData, error}) {
     // const [carData, setCarData] = useState({
     //     vin: '',
     //     plate: '',
@@ -38,7 +38,8 @@ export default function CarDetails({carData, setCarData}) {
                 <Grid item xs={12} md={6}>
                     <TextField
                         required
-                        id="vin"
+                        id="plate"
+                        error = {error !== "" && carData.plate === ""}
                         label="Numar de înmatriculare"
                         fullWidth
                         variant="standard"

@@ -8,14 +8,14 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Estimates from './components/Estimates'
 import About from './components/about/About'
 import RootPage from "./components/RootPage";
-import LogIn from "./components/estimateCreationForm/LogIn";
-import Register from "./components/estimateCreationForm/Register";
+import LogIn from "./components/authentification/LogIn";
+import Register from "./components/authentification/Register";
 import {AuthProvider, useAuth} from "./contexts/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
 import  secureLocalStorage  from  "react-secure-storage";
 import {useEffect} from "react";
-
+import Home from "./components/home/Home";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -32,7 +32,7 @@ const router = createBrowserRouter([
 
             {
                 path: "about",
-                element:  <PrivateRoute component={About}></PrivateRoute>
+                element:  <PrivateRoute component={Home}></PrivateRoute>
             },
 
             {
@@ -41,7 +41,9 @@ const router = createBrowserRouter([
             },
             {
                 path: "",
+                // element:  <Home />
                 element:  <PublicRoute component={LogIn}></PublicRoute>
+
             },
 
             {

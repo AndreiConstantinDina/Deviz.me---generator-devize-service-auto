@@ -3,7 +3,7 @@ import {useAuth} from "../contexts/AuthContext";
 import {Navigate, redirect} from 'react-router-dom'
 import  secureLocalStorage  from  "react-secure-storage";
 
-import LogIn from "./estimateCreationForm/LogIn";
+import LogIn from "./authentification/LogIn";
 function PrivateRoute ({ component: Component, ...rest}) {
 
     const {user} = useAuth()

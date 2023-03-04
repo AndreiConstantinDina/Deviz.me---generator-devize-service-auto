@@ -7,7 +7,7 @@ import Checkbox from '@mui/material/Checkbox';
 import {useEffect} from "react";
 import {useState, setState} from "react";
 
-export default function ClientDetails({clientData, setClientData}) {
+export default function ClientDetails({clientData, setClientData, error}) {
 
     // const [clientData, setClientData] = useState({
     //     lastName: '',
@@ -29,6 +29,7 @@ export default function ClientDetails({clientData, setClientData}) {
                 <Grid item xs={12} sm={6}>
                     <TextField
                         required
+                        error = {error !== "" && clientData.lastName === ""}
                         label="Nume"
                         fullWidth
                         autoComplete="family-name"
@@ -42,6 +43,8 @@ export default function ClientDetails({clientData, setClientData}) {
                 <Grid item xs={12} sm={6}>
                     <TextField
                         required
+                        error = {error !== "" && clientData.firstName === ""}
+
                         label="Prenume"
                         fullWidth
                         autoComplete="given-name"
@@ -55,7 +58,6 @@ export default function ClientDetails({clientData, setClientData}) {
 
                 <Grid item xs={12}>
                     <TextField
-                        required
                         label="Adresa"
                         fullWidth
                         autoComplete="shipping address-line1"
@@ -69,7 +71,6 @@ export default function ClientDetails({clientData, setClientData}) {
 
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        required
                         label="Oraș"
                         fullWidth
                         autoComplete="shipping address-level2"
@@ -95,10 +96,12 @@ export default function ClientDetails({clientData, setClientData}) {
                 <Grid item xs={12} sm={6}>
                     <TextField
                         required
+                        error = {error !== "" && clientData.phone === ""}
+
                         label="Telefon"
                         fullWidth
                         variant="standard"
-                        defaultValue={clientData.phone}
+                        defaultValue={clientData.phone }
                         onChange = { (event) =>
                             clientData.phone = event.target.value
                         }

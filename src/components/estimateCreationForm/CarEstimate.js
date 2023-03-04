@@ -16,10 +16,11 @@ import CarDetails from './CarDetails';
 import ProblemsDescribedByClient from "./ProblemsDescribedByClient";
 import ProblemsFoundByService from "./ProblemsFoundByService";
 import {useRef, useState} from "react";
-import {db} from './firebase'
+import {db} from '../authentification/firebase'
 import {addDoc, collection} from '@firebase/firestore'
-import {Routes, Route, redirect} from 'react-router-dom';
 import { Link } from "react-router-dom";
+import {useAuth} from "../../contexts/AuthContext";
+import EstimateError from "../alerts/EstimateError";
 
 function Copyright() {
     return (
@@ -54,8 +55,9 @@ const steps = ['Detalii client', 'Detalii masina', 'Probleme descrise de client'
 const theme = createTheme();
 
 export default function CarEstimate() {
-
-    const deviz = collection(db, "devize")
+    const currentUser = useAuth().currentUser
+    const uid = currentUser.uid
+    const deviz = collection(db, `${uid}`)
 
     const [clientData, setClientData] = useState({
         lastName: '',
@@ -105,9 +107,9 @@ export default function CarEstimate() {
     const getStepContent = (step) => {
         switch (step) {
             case 0:
-                return <ClientDetails clientData = {clientData}  setClientData = {setClientData}/>;
+                return <ClientDetails clientData = {clientData}  setClientData = {setClientData} error = {error}/>;
             case 1:
-                return <CarDetails carData = {carData} setCarData = {setCarData}/>;
+                return <CarDetails carData = {carData} setCarData = {setCarData}  error = {error}/>;
             case 2:
                 return <ProblemsDescribedByClient problemsData = {problemsData} setProblemsData = {setProblemsData}/>;
             case 3:
@@ -116,12 +118,34 @@ export default function CarEstimate() {
                 throw new Error('Unknown step');
         }
     }
-
     const [activeStep, setActiveStep] = React.useState(0);
+    const [error, setError] = useState("")
+    function validateStep() {
+        switch (activeStep) {
+            case 0:
+                return clientData.lastName !== "" && clientData.firstName !== "" && clientData.phone !== ""
+            case 1:
+                return carData.plate !== ""
+            case 2:
+                return true
+            case 3:
+                return true
+            default:
+                throw new Error('Unknown step');
+        }
+    }
+
 
 
     const handleNext = () => {
-        setActiveStep(activeStep + 1);
+        if (validateStep()){
+            setActiveStep(activeStep + 1);
+            setError('')
+        }
+        else
+            setError("Câmpurile marcate cu * nu pot fi goale")
+
+
     };
 
     const handleBack = () => {
@@ -135,7 +159,8 @@ export default function CarEstimate() {
             let date = new Date().getDate().toString() + '/' + new Date().getMonth().toString() + '/' + new Date().getFullYear().toString()
             // let hour = new Date().getHours().toString() + ':' + new Date().getMinutes().toString() + ":" + new Date().getSeconds().toString()
             // let fulldate = hour + " " + date
-            let data = {clientData,
+            let data = {
+                clientData,
                 carData,
                 problemsData,
                 foundProblemsData,
@@ -213,6 +238,7 @@ export default function CarEstimate() {
                 </Paper>
                 <Copyright />
             </Container>
+            {error !== "" ? <EstimateError error = {error}  /> : <div/>}
         </ThemeProvider>
     );
 }

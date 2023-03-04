@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/static/css/main.073c9b0a.css",
-    "main.js": "/static/js/main.e1071bdd.js",
-    "static/js/787.005f4f17.chunk.js": "/static/js/787.005f4f17.chunk.js",
-    "index.html": "/index.html",
-    "main.073c9b0a.css.map": "/static/css/main.073c9b0a.css.map",
-    "main.e1071bdd.js.map": "/static/js/main.e1071bdd.js.map",
-    "787.005f4f17.chunk.js.map": "/static/js/787.005f4f17.chunk.js.map"
+    "main.css": "/github.io/proiect-deviz/static/css/main.073c9b0a.css",
+    "main.js": "/github.io/proiect-deviz/static/js/main.34cde6b8.js",
+    "static/js/787.005f4f17.chunk.js": "/github.io/proiect-deviz/static/js/787.005f4f17.chunk.js",
+    "index.html": "/github.io/proiect-deviz/index.html",
+    "main.073c9b0a.css.map": "/github.io/proiect-deviz/static/css/main.073c9b0a.css.map",
+    "main.34cde6b8.js.map": "/github.io/proiect-deviz/static/js/main.34cde6b8.js.map",
+    "787.005f4f17.chunk.js.map": "/github.io/proiect-deviz/static/js/787.005f4f17.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.073c9b0a.css",
-    "static/js/main.e1071bdd.js"
+    "static/js/main.34cde6b8.js"
   ]
 }
