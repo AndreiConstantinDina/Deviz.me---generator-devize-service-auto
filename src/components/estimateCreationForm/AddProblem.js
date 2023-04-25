@@ -4,8 +4,9 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button'
 import Grid from "@mui/material/Grid";
 import {useState} from "react";
+import Typography from "@mui/material/Typography";
 
-function AddProblem({problemsData, setProblemsData}) {
+function AddProblem({problemsData, setProblemsData, addProblemLabel, helperText, problemsDict, setProblemsDict}) {
     const handleAddNewProblem = () => {
         if (problemsData.newProblem === '')
             ;
@@ -15,24 +16,37 @@ function AddProblem({problemsData, setProblemsData}) {
             for (var i=0; i<problems.length; i++)
                 if (problems[i] === problemsData.newProblem)
                     adauga = false
-            if (adauga)
+            if (adauga) {
                 problems.push(problemsData.newProblem)
-            setProblemsData({...problemsData, problems: problems, newProblem: ''})
+                problemsDict.push({
+                    key: problemsData.newProblem,
+                    value: {
+                        problems: [],
+                        newProblem: ''
+                    }
+                }
 
+                )
+            }
+            setProblemsData({...problemsData, problems: problems, newProblem: ''})
         }
 
     }
     return (
-        <Grid container spacing={1} direction={'column'} justifyContent={'space-evenly'} alignItems={'center'}>
-            <Grid item xs={12} sm={'auto'}>
+        <Grid container spacing={3} direction={'row'} justifyContent={'space-between'} alignItems={'center'} width = 'auto' marginBottom={'3vh'}>
+            {/*<Grid item>*/}
+            {/*    <Typography fontSize={'140%'}>*/}
+            {/*        {helperText}*/}
+            {/*    </Typography>*/}
+            {/*</Grid>*/}
+            <Grid item>
                 <Autocomplete
                     size={'small'}
                     freeSolo
-                    id="combo-box-demo"
                     options={problemsData.options}
                     sx={{width: 300}}
                     value = {problemsData.newProblem}
-                    renderInput={(params) => <TextField{...params} label="Problema" onChange={
+                    renderInput={(params) => <TextField{...params} label={addProblemLabel} onChange={
                         (event) => setProblemsData({
                             ...problemsData,
                             newProblem: event.target.value
@@ -47,7 +61,7 @@ function AddProblem({problemsData, setProblemsData}) {
 
             </Grid>
 
-            <Grid item xs={12} sm={6}>
+            <Grid item>
 
                 <Button variant="outlined"
                         onClick={() => {handleAddNewProblem()}}

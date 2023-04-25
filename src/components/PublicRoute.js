@@ -10,7 +10,7 @@ function PublicRoute ({ component: Component, ...rest}) {
     console.log(user)
     if (secureLocalStorage.getItem("logged-in"))
         return (
-            <Navigate redirect to = "/about"/>
+            <Navigate redirect to = "/acasa"/>
         )
     else
         return <Component/>

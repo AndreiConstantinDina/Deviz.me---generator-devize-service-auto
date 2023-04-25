@@ -10,7 +10,7 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {createTheme, styled, ThemeProvider} from '@mui/material/styles';
 import ClientDetails from './ClientDetails';
 import CarDetails from './CarDetails';
 import ProblemsDescribedByClient from "./ProblemsDescribedByClient";
@@ -21,36 +21,60 @@ import {addDoc, collection} from '@firebase/firestore'
 import { Link } from "react-router-dom";
 import {useAuth} from "../../contexts/AuthContext";
 import EstimateError from "../alerts/EstimateError";
+import Grid from "@mui/material/Grid";
+import ToggleButton from "@mui/material/ToggleButton";
+import Slide from "@mui/material/Slide";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import { useNavigate } from 'react-router-dom'
+import Parts from "./Parts";
+import VehicleReception from "./VehicleReception";
+import ServiceRecommendations from "./ServiceRecommendations";
+import Labour from "./Labour";
+import RepairRequirements from "./RepairRequirements";
 
-function Copyright() {
-    return (
-        <Typography variant="body2" color="text.secondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="src/components#">
-                deviz.me
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
+
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
+
+
+const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
+    '& .MuiToggleButtonGroup-grouped': {
+        margin: theme.spacing(5),
+        marginBottom: 0,
+
+        paddingTop: 0,
+        border: 0,
+        '&.Mui-disabled': {
+            border: 0,
+        },
+        '&:not(:first-of-type)': {
+            borderRadius: theme.shape.borderRadius,
+        },
+        '&:first-of-type': {
+            borderRadius: theme.shape.borderRadius,
+        },
+    },
+}));
+
+const steps = ['client', 'car', 'problemsDescription', 'serviceRequirements', 'reception', 'repairRequirements', 'parts', 'labour', 'recommendations']
+
+const stepsDict = {
+    'client': 'Client',
+    'car': 'Autovehicul',
+    'problemsDescription': 'Descriere defecțiuni',
+    'serviceRequirements': 'Cerințe de service',
+    'reception': 'Recepție autovehicul',
+    'repairRequirements': 'Constatari în service',
+    'parts': 'Piese',
+    'labour': 'Manopera',
+    'recommendations': "Recomandări service",
+
 }
-
-const steps = ['Detalii client', 'Detalii masina', 'Probleme descrise de client', 'Cerințe service'];
-
-// function getStepContent(step) {
-//     switch (step) {
-//         case 0:
-//             return <ClientDetails clientData = {estimateData.clientData}  setClientData = {estimateData.setClientData}/>;
-//         case 1:
-//             return <CarDetails />;
-//         case 2:
-//             return <ProblemsDescribedByClient />;
-//         case 3:
-//             return <ProblemsFoundByService />;
-//         default:
-//             throw new Error('Unknown step');
-//     }
-// }
 
 const theme = createTheme();
 
@@ -97,45 +121,180 @@ export default function CarEstimate() {
 
     });
 
-    const [estimateData, setEstimateData] = useState({
-        clientData,
-        carData,
-        problemsData,
-        foundProblemsData
+    const [labourDiscount, setLabourDiscount] = useState(0)
+    const [labourDiscountType, setLabourDiscountType] = useState('percentage')
+
+    const [partsDiscount, setPartsDiscount] = useState(0)
+    const [partsDiscountType, setPartsDiscountType] = useState('percentage')
+
+    const [problemsDict, setProblemsDict] = useState([])
+
+    const [partsData, setPartsData] = useState({
+        parts: [],
+        newPart: ''
     })
 
-    const getStepContent = (step) => {
-        switch (step) {
-            case 0:
-                return <ClientDetails clientData = {clientData}  setClientData = {setClientData} error = {error}/>;
-            case 1:
-                return <CarDetails carData = {carData} setCarData = {setCarData}  error = {error}/>;
-            case 2:
-                return <ProblemsDescribedByClient problemsData = {problemsData} setProblemsData = {setProblemsData}/>;
-            case 3:
-                return <ProblemsFoundByService foundProblemsData = {foundProblemsData} setFoundProblemsData = {setFoundProblemsData}/>;
-            default:
-                throw new Error('Unknown step');
-        }
-    }
+    const [receptionData, setReceptionData] = useState({
+        info: [],
+        newInfo: ''
+    })
+
+    const [recommendationsData, setRecommendationsData] = useState({
+        recommendations: [],
+        newRecommendation: ''
+    })
+
+    const [currentLabourTab, setCurrentLabourTab] = useState(0)
+
     const [activeStep, setActiveStep] = React.useState(0);
+    const [step, setStep] = React.useState('client');
     const [error, setError] = useState("")
+    const [newError, setNewError] = useState(true)
+
+    const [deletionError, setDeletionError] = useState("")
+    const [newDeletionError, setNewDeletionError] = useState(false)
+
+    const navigate = useNavigate();
+
+    const [showCode, setShowCode] = useState(false)
+    const [showMaker, setShowMaker] = useState(false)
+    const [showInfo, setShowInfo] = useState(false)
+
+    const [requirementsHourlyLabourData, setRequirementsHourlyLabourData] = useState([]);
+    const [requirementsServicesData, setRequirementsServicesData] = useState([]);
+    const [requirementsFinalVerificationsData, setRequirementsFinalVerificationsData] = useState([]);
+
+
+    const [hourlyLabourData, setHourlyLabourData] = useState({
+        items: [],
+        options: [],
+        newItem: ''
+    })
+
+    const [servicesData, setServicesData] = useState({
+        items: [],
+        options: [],
+        newItem: ''
+    })
+
+    const [finalVerificationsData, setFinalVerificationsData] = useState({
+        items: [],
+        options: [],
+        newItem: ''
+    })
+
+    const [currentRepairRequirementsTab, setCurrentRepairRequirementsTab] = useState(0)
+
     function validateStep() {
-        switch (activeStep) {
-            case 0:
+        //const steps = ['client', 'car', 'problemsDescription', 'serviceRequirements', 'reception', 'repairRequirements', 'parts', 'labour', 'recommendations']
+        switch (step) {
+            case 'client':
                 return clientData.lastName !== "" && clientData.firstName !== "" && clientData.phone !== ""
-            case 1:
+            case 'car':
                 return carData.plate !== ""
-            case 2:
+            case 'problemsDescription':
                 return true
-            case 3:
+            case 'serviceRequirements':
+                return true
+            case 'reception':
+                return true
+            case 'repairRequirements':
+                return true
+            case 'parts':
+                return true
+            case 'labour':
+                return true
+            case 'recommendations':
                 return true
             default:
                 throw new Error('Unknown step');
         }
     }
 
+    const validateEstimate = () => {
+        if ( clientData.lastName === "" || clientData.firstName === "" || clientData.phone === "")
+        {
+            setError("Datele clientului sunt incomplete")
+            setStep("client")
+            setNewError(true)
+            return false
 
+        }
+        else if (carData.plate === "")
+        {
+            setError("Datele autovehiculului sunt incomplete")
+            setStep("car")
+            setNewError(true)
+            return false
+
+        }
+        return true
+    }
+
+    const getStepContent = (step) => {
+        //const steps = ['client', 'car', 'problemsDescription', 'serviceRequirements', 'reception', 'repairRequirements', 'parts', 'labour', 'recommendations']
+
+        switch (step) {
+            case 'client':
+                return <ClientDetails clientData = {clientData}  setClientData = {setClientData} error = {error}/>;
+            case 'car':
+                return <CarDetails carData = {carData} setCarData = {setCarData}  error = {error}/>;
+            case 'problemsDescription':
+                return <ProblemsDescribedByClient problemsData = {problemsData} setProblemsData = {setProblemsData} problemsDict={problemsDict} setProblemsDict={setProblemsDict}
+                        otherProblemsData={foundProblemsData} deletionError = {deletionError} setDeletionError = {setDeletionError} newDeletionError = {newDeletionError}  setNewDeletionError = {setNewDeletionError}
+                        />;
+            case 'serviceRequirements':
+                return <ProblemsFoundByService foundProblemsData = {foundProblemsData} setFoundProblemsData = {setFoundProblemsData} problemsDict={problemsDict} setProblemsDict={setProblemsDict}
+                        otherProblemsData={foundProblemsData} deletionError = {deletionError} setDeletionError = {setDeletionError} newDeletionError = {newDeletionError}  setNewDeletionError = {setNewDeletionError}
+                        />;
+            case 'reception':
+                return <VehicleReception receptionData={receptionData} setReceptionData={setReceptionData}/>
+            case 'repairRequirements':
+                return <RepairRequirements currentRepairRequirementsTab={currentRepairRequirementsTab} setCurrentRepairRequirementsTab={setCurrentRepairRequirementsTab}
+                                           problemsData = {problemsData} setProblemsData = {setProblemsData}
+                                           foundProblemsData={foundProblemsData} setFoundProblemsData={setFoundProblemsData}
+                                           problemsDict = {problemsDict} setProblemsDict = {setProblemsDict}
+
+                                           hourlyLabourData ={hourlyLabourData} setHourlyLabourData = {setHourlyLabourData}
+                                           finalVerificationsData={finalVerificationsData} setFinalVerificationsData={setFinalVerificationsData}
+                                           servicesData={servicesData} setServicesData={setServicesData}
+                                           requirementsHourlyLabourData = {requirementsHourlyLabourData} setRequirementsHourlyLabourData={setRequirementsHourlyLabourData}
+                                            requirementsServicesData={requirementsServicesData} setRequirementsServicesData={setRequirementsServicesData}
+                                            requirementsFinalVerificationsData={requirementsFinalVerificationsData} setRequirementsFinalVerificationsData = {setRequirementsFinalVerificationsData}
+                                           deletionError = {deletionError} setDeletionError = {setDeletionError} newDeletionError = {newDeletionError}  setNewDeletionError = {setNewDeletionError}
+
+                />
+            case 'parts':
+                return <Parts partsData = {partsData} setPartsData={setPartsData} showCode={showCode} showMaker={showMaker} showInfo={showInfo}
+                               setShowCode={setShowCode} setShowInfo={setShowInfo} setShowMaker={setShowMaker}
+                                partsDiscount={partsDiscount} setPartsDiscount={setPartsDiscount} partsDiscountType={partsDiscountType} setPartsDiscountType={setPartsDiscountType}
+                        />
+            case 'labour':
+                return <Labour currentLabourTab={currentLabourTab} setCurrentLabourTab={setCurrentLabourTab}
+                               hourlyLabourData ={hourlyLabourData} setHourlyLabourData = {setHourlyLabourData}
+                                finalVerificationsData={finalVerificationsData} setFinalVerificationsData={setFinalVerificationsData}
+                               servicesData={servicesData} setServicesData={setServicesData}
+                               labourDiscount={labourDiscount} setLabourDiscount = {setLabourDiscount}
+                               labourDiscountType={labourDiscountType} setLabourDiscountType = {setLabourDiscountType}
+                               requirementsHourlyLabourData = {requirementsHourlyLabourData} setRequirementsHourlyLabourData={setRequirementsHourlyLabourData}
+                               requirementsServicesData={requirementsServicesData} setRequirementsServicesData={setRequirementsServicesData}
+                               requirementsFinalVerificationsData={requirementsFinalVerificationsData} setRequirementsFinalVerificationsData = {setRequirementsFinalVerificationsData}
+                               deletionError = {deletionError} setDeletionError = {setDeletionError} newDeletionError = {newDeletionError}  setNewDeletionError = {setNewDeletionError}
+
+                />
+            case 'recommendations':
+                return <ServiceRecommendations recommendationsData={recommendationsData} setRecommendationsData={setRecommendationsData}/>
+            default:
+                throw new Error('Unknown step');
+        }
+    }
+
+
+    const handleStep = (event, newStep) => {
+        if (newStep) {
+            setStep(newStep)
+        }
+    }
 
     const handleNext = () => {
         if (validateStep()){
@@ -143,7 +302,10 @@ export default function CarEstimate() {
             setError('')
         }
         else
+        {
             setError("Câmpurile marcate cu * nu pot fi goale")
+            setNewError(true)
+        }
 
 
     };
@@ -154,26 +316,52 @@ export default function CarEstimate() {
 
     const handleFinish = (e) => {
 
+        if (!validateEstimate())
+            return
+
         try{
-            //addDoc(deviz, estimateData)
             let date = new Date().getDate().toString() + '/' + new Date().getMonth().toString() + '/' + new Date().getFullYear().toString()
-            // let hour = new Date().getHours().toString() + ':' + new Date().getMinutes().toString() + ":" + new Date().getSeconds().toString()
-            // let fulldate = hour + " " + date
+
             let data = {
                 clientData,
                 carData,
                 problemsData,
                 foundProblemsData,
+                labourDiscount,
+                labourDiscountType,
+                partsDiscount,
+                partsDiscountType,
+                problemsDict,
+                partsData,
+                receptionData,
+                recommendationsData,
+                currentLabourTab,
+                activeStep,
+                step,
+                error,
+                newError,
+                deletionError,
+                newDeletionError,
+                showCode,
+                showMaker,
+                showInfo,
+                requirementsHourlyLabourData,
+                requirementsServicesData,
+                requirementsFinalVerificationsData,
+                hourlyLabourData,
+                servicesData,
+                finalVerificationsData,
+                currentRepairRequirementsTab,
                 date: date
             }
-            // console.log(estimateData)
             addDoc(deviz, data);
-
-
+            navigate('/log-in', { replace: true });
         }
         catch(e){
-            console.log(e);
         }
+
+
+
     };
 
     return (
@@ -184,61 +372,97 @@ export default function CarEstimate() {
                 color="default"
                 elevation={0}
                 sx={{
-                    position: 'relative',
                     borderBottom: (t) => `1px solid ${t.palette.divider}`,
                 }}
             >
 
             </AppBar>
-            <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
-                <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
-                    <Typography component="h1" variant="h4" align="center">
-                        Creare deviz
-                    </Typography>
-                    <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
-                        {steps.map((label) => (
-                            <Step key={label}>
-                                <StepLabel>{label}</StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
-                    {activeStep === steps.length ? (
-                        <React.Fragment>
-                            <Typography variant="h5" gutterBottom>
-                                Devizul dumneavoastră este gata!
+            <Grid container spacing={2}
+                  direction="column"
+                  justifyContent="space-around  "
+                  alignItems="center"
+                  auto
+                  padding={5}
+                  style={{ gap: 30 }}
+            >
 
-                            </Typography>
-                            <Link to='/istoric-devize' style={{ textDecoration: 'none' }}>
-                                <Button onClick={handleFinish} sx={{ mt: 3, ml: 1 }}>
-                                    Salvează deviz
-                                </Button>
-                            </Link>
+                <Grid container spacing={6}
+                  direction="row"
+                  justifyContent="start"
+                  alignItems="start"
+                  lg
+                >
+                {/*navigation system*/}
 
-                        </React.Fragment>
-                    ) : (
-                        <React.Fragment>
-                            {getStepContent(activeStep)}
-                            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                {activeStep !== 0 && (
-                                    <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
-                                        Înapoi
-                                    </Button>
-                                )}
+                    <Grid item width={'30vw'} sx={{justifyContent: 'start', position: 'static'}}>
+                        <Container display="flex" component="main" maxWidth="xs"
+                                   >
 
-                                <Button
-                                    variant="contained"
-                                    onClick={handleNext}
-                                    sx={{ mt: 3, ml: 1 }}
-                                >
-                                    {activeStep === steps.length - 1 ? 'Termină' : 'Înainte'}
-                                </Button>
-                            </Box>
-                        </React.Fragment>
-                    )}
-                </Paper>
-                <Copyright />
-            </Container>
-            {error !== "" ? <EstimateError error = {error}  /> : <div/>}
+                            <StyledToggleButtonGroup
+                                size="small"
+                                value={step}
+                                exclusive
+                                onChange={handleStep}
+                                orientation="vertical"
+                                fullWidth
+                            >
+                                {steps.map((element) => {
+                                    return <ToggleButton value={element} sx={{height: '7vh', justifyContent: 'start', alignItems: 'center', marginBottom: '99vh'}}>
+                                        <Typography variant="h6" gutterBottom
+                                                    sx={{justifyContent: "center", display: 'block', paddingTop: "3.5vh", textTransform: 'none'}}>
+                                            {stepsDict[element]}
+                                        </Typography>
+                                    </ToggleButton>
+                                })}
+                            </StyledToggleButtonGroup>
+
+                        </Container>
+                    </Grid>
+
+                {/*/navigation system*/}
+
+                    {/*content*/}
+
+                    <Grid item width={'60vw'} marginTop={"10vh"}>
+                        {getStepContent(step)}
+                    </Grid>
+
+                    {/*content*/}
+
+
+                </Grid>
+
+
+            {/*set butoane cancel si save*/}
+                <Grid container spacing={2}
+                      direction="row"
+                      justifyContent="flex-end"
+                      alignItems="center"
+                      lg
+                >
+                    <Grid item>
+                        <Button variant="outlined"
+                                onClick={handleFinish}
+                                sx={{color: 'green', borderColor: 'green'}}
+                        > Save </Button>
+                    </Grid>
+                        <Grid item>
+                            <Button variant="outlined"
+                                onClick={() =>{navigate('/log-in', { replace: true })}}
+                                sx={{color: 'red', borderColor: 'red'}}
+
+                        >Cancel
+                            </Button>
+                        </Grid>
+
+
+
+                </Grid>
+            </Grid>
+            {error !== "" && <EstimateError error = {error}  refreshOn = {newError} setRefreshOn={setNewError}/>}
+            {newDeletionError && <EstimateError error = {deletionError}  refreshOn = {newDeletionError} setRefreshOn={setNewDeletionError}/>}
+
         </ThemeProvider>
+
     );
 }

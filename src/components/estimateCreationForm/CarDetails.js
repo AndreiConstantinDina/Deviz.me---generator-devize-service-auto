@@ -30,10 +30,10 @@ export default function CarDetails({carData, setCarData, error}) {
     // })
     return (
         <React.Fragment>
-            <Typography variant="h6" gutterBottom>
-                Introduceți datele mașinii:
+            {/*<Typography variant="h6" gutterBottom>*/}
+            {/*    Introduceți datele mașinii:*/}
 
-            </Typography>
+            {/*</Typography>*/}
             <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
                     <TextField
@@ -44,7 +44,13 @@ export default function CarDetails({carData, setCarData, error}) {
                         fullWidth
                         variant="standard"
                         defaultValue={carData.plate}
-                        onChange={(event) => setCarData ({...carData, plate: event.target.value})}
+                        onChange={(event) =>
+
+                            setCarData ({...carData, plate: event.target.value})
+
+                        }
+                        inputProps={{ style: { textTransform: "uppercase" } }}
+                        // textTransform = "uppercase"
                     />
                 </Grid>
 

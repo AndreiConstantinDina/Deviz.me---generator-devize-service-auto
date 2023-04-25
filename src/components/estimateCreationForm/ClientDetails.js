@@ -22,9 +22,9 @@ export default function ClientDetails({clientData, setClientData, error}) {
 
     return (
         <React.Fragment>
-            <Typography variant="h6" gutterBottom>
-                Introduceți datele clientului:
-            </Typography>
+            {/*<Typography variant="h6" gutterBottom>*/}
+            {/*    Introduceți datele clientului:*/}
+            {/*</Typography>*/}
             <Grid container spacing={3}>
                 <Grid item xs={12} sm={6}>
                     <TextField
@@ -36,7 +36,7 @@ export default function ClientDetails({clientData, setClientData, error}) {
                         variant="standard"
                         defaultValue={clientData.lastName}
                         onChange = { (event) =>
-                            clientData.lastName = event.target.value
+                            setClientData({...clientData, lastName: event.target.value})
                         }
                     />
                 </Grid>
@@ -51,7 +51,7 @@ export default function ClientDetails({clientData, setClientData, error}) {
                         variant="standard"
                         defaultValue={clientData.firstName}
                         onChange = { (event) =>
-                            clientData.firstName = event.target.value
+                            setClientData({...clientData, firstName: event.target.value})
                         }
                     />
                 </Grid>
@@ -64,7 +64,7 @@ export default function ClientDetails({clientData, setClientData, error}) {
                         variant="standard"
                         defaultValue={clientData.address}
                         onChange = { (event) =>
-                            clientData.address = event.target.value
+                            setClientData({...clientData, address: event.target.value})
                         }
                     />
                 </Grid>
@@ -77,7 +77,7 @@ export default function ClientDetails({clientData, setClientData, error}) {
                         variant="standard"
                         defaultValue={clientData.city}
                         onChange = { (event) =>
-                            clientData.city = event.target.value
+                            setClientData({...clientData, city: event.target.value})
                         }
                     />
                 </Grid>
@@ -88,7 +88,7 @@ export default function ClientDetails({clientData, setClientData, error}) {
                         variant="standard"
                         defaultValue={clientData.county}
                         onChange = { (event) =>
-                            clientData.county = event.target.value
+                            setClientData({...clientData, country: event.target.value})
                         }
                     />
                 </Grid>
@@ -103,7 +103,7 @@ export default function ClientDetails({clientData, setClientData, error}) {
                         variant="standard"
                         defaultValue={clientData.phone }
                         onChange = { (event) =>
-                            clientData.phone = event.target.value
+                            setClientData({...clientData, phone: event.target.value})
                         }
                     />
                 </Grid>
@@ -116,7 +116,7 @@ export default function ClientDetails({clientData, setClientData, error}) {
                         variant="standard"
                         defaultValue={clientData.email}
                         onChange = { (event) =>
-                            clientData.email = event.target.value
+                            setClientData({...clientData, email: event.target.value})
                         }
                     />
                 </Grid>

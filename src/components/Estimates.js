@@ -15,18 +15,15 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { styled } from '@mui/material/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import ClientDetails from './estimateCreationForm/ClientDetails';
-import CarDetails from './estimateCreationForm/CarDetails';
-import ProblemsDescribedByClient from "./estimateCreationForm/ProblemsDescribedByClient";
-import ProblemsFoundByService from "./estimateCreationForm/ProblemsFoundByService";
+
+import EstimateClick from "./EstimateClick";
 import {useRef, useState} from "react";
 import {db} from './authentification/firebase'
 import {useEffect} from "react";
 import {collection, getDocs, doc, deleteDoc} from "@firebase/firestore";
-import DeleteIcon from "@mui/icons-material/Delete";
-import IconButton from "@mui/material/IconButton";
-import EstimateClick from "./EstimateClick";
+
 import {useAuth} from "../contexts/AuthContext";
+import SuccessSnackBar from "./alerts/SuccessSnackBar";
 
 
 const theme = createTheme();
@@ -54,7 +51,10 @@ function Estimates() {
     const currentUser = useAuth().currentUser
     const uid = currentUser.uid
     const [info, setInfo] =  useState([]);
+    const [deletedEstimate, setDeletedEstimate] = useState(false)
     const estimatesRef = collection(db, `${uid}`) // luam colectia de devize din firestore
+    const [pageRefreshed, setPageRefreshed] = useState(false)
+
 
     const newInformation = () => {
         const getEstimates = async () => {
@@ -66,18 +66,22 @@ function Estimates() {
 
     useEffect(() => {
         newInformation()
+        setPageRefreshed(true)
+        console.log(info)
     }, []);
 
     const deleteElement = (id) => {
         const docRef = doc(db, `${uid}`, id);
         deleteDoc(docRef)
             .then(() => {
-                console.log("Element sters")
+                setDeletedEstimate(!deletedEstimate)
+                setPageRefreshed(false)
             })
             .catch(error => {
                 console.log(error);
             })
-        newInformation()
+        const findID = (el) => el.id === id
+        info.splice(info.findIndex(findID), 1)
     }
     const [alignment, setAlignment] = React.useState('open');
 
@@ -127,37 +131,13 @@ function Estimates() {
 
                 {info.map((element) => {
                     return(
-                    <React.Fragment sx={{display: 'grid'}}>
-                        <EstimateClick element = {element} info = {info} setInfo= {setInfo}/>
-
-                        {/*<Paper variant="outlined" sx={{my: {xs: 3, md: 1},*/}
-                        {/*    p: {xs: 1, md: 3},*/}
-                        {/*    display: 'flex',*/}
-                        {/*    justifyContent: 'space-between'*/}
-                        {/*}}*/}
-                        {/*>*/}
-                        {/*        <Typography>*/}
-                        {/*            {element.carData.plate}*/}
-                        {/*        </Typography>*/}
-
-                        {/*        <Typography>*/}
-                        {/*            {element.clientData.lastName} {element.clientData.firstName}*/}
-                        {/*        </Typography>*/}
-
-
-                        {/*        <Typography>*/}
-                        {/*            {element.date}*/}
-                        {/*        </Typography>*/}
-                        {/*        <IconButton>*/}
-                        {/*            <DeleteIcon onClick={()=>deleteElement(element.id)}>*/}
-                        {/*            </DeleteIcon>*/}
-                        {/*        </IconButton>*/}
-                        {/*    </Paper>*/}
-
-                        </React.Fragment>)
+                    <div sx={{display: 'grid'}}>
+                        <EstimateClick element = {element} info = {info} setInfo= {setInfo} deleteElement={deleteElement}/>
+                    </div>)
                     }
                 )}
             </Container>}
+            {!pageRefreshed && <SuccessSnackBar message = "Devizul a fost șters cu succes!" refreshOn={deletedEstimate}/>}
         </ThemeProvider>
     );
 }

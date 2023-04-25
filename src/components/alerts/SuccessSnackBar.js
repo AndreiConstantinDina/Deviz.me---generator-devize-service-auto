@@ -8,7 +8,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function EstimateError({error, refreshOn, setRefreshOn} ) {
+export default function SuccessSnackBar( props ) {
     const [open, setOpen] = React.useState(false);
 
     const handleClick = () => {
@@ -21,17 +21,16 @@ export default function EstimateError({error, refreshOn, setRefreshOn} ) {
         }
 
         setOpen(false);
-        setRefreshOn(false)
     };
     useEffect(
         () => {
             setOpen(true);
-        }, [refreshOn])
+        }, [props.refreshOn])
     return (
 
-        <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
-            <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-                {error}
+        <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                {props.message}
             </Alert>
         </Snackbar>
 

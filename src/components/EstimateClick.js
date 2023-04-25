@@ -13,7 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
-
+import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from "@mui/icons-material/Delete";
 import {collection, deleteDoc, doc, getDocs} from "@firebase/firestore";
 import {useEffect, useState} from "react";
@@ -23,12 +23,31 @@ import ToggleButton from "@mui/material/ToggleButton";
 import {styled} from "@mui/material/styles";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Grid from "@mui/material/Grid"
+import {TextField} from "@mui/material";
+import EditEstimate from "./EditEstimate"
+import ConfirmCloseAlert from "./alerts/ConfirmCloseAlert";
+import ConfirmDeleteAlert from "./alerts/ConfirmDeleteAlert";
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
+
+const steps = ['client', 'car', 'problemsDescription', 'serviceRequirements', 'reception', 'repairRequirements', 'parts', 'labour', 'recommendations']
+
+const stepsDict = {
+    'client': 'Client',
+    'car': 'Autovehicul',
+    'problemsDescription': 'Descriere defecțiuni',
+    'serviceRequirements': 'Cerințe de service',
+    'reception': 'Recepție autovehicul',
+    'repairRequirements': 'Constatari în service',
+    'parts': 'Piese',
+    'labour': 'Manopera',
+    'recommendations': "Recomandări service",
+
+}
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
     '& .MuiToggleButtonGroup-grouped': {
@@ -49,45 +68,40 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
     },
 }));
 
-export default function EstimateClick({element, info, setInfo}) {
+export default function EstimateClick({element, info, setInfo, deleteElement}) {
     const currentUser = useAuth().currentUser
-    const uid = currentUser.uid
-    const estimatesRef = collection(db, `${uid}`) // luam colectia de devize din firestore
     const [open, setOpen] = React.useState(false);
+    const [edit, setEdit] = React.useState(false)
+    const [save, setSave] = React.useState(false)
+    const [confirmClose, setConfirmClose] = React.useState(false)
+    const [showConfirmDialog, setShowConfirmDialog] = React.useState(false)
+    const [justRendered, setJustRendered] = React.useState(true)
+    const [confirmDelete, setConfirmDelete] = React.useState(false)
+    const [showConfirmDeleteDialog, setShowConfirmDeleteDialog] = React.useState(false)
+
+    const handleDelete = () => {
+        setShowConfirmDeleteDialog(true)
+    }
 
     const handleClickOpen = () => {
         setOpen(true);
     };
 
     const handleClose = () => {
-        setOpen(false);
-    };
-
-    const newInformation = () => {
-        const getEstimates = async () => {
-            const data = await getDocs(estimatesRef)
-            console.log(data)
-            setInfo(data.docs.map((doc) => ({...doc.data(), id: doc.id, date: doc.data().date})))
+        setJustRendered(false)
+        if (edit)
+            setShowConfirmDialog(true)
+        if (!edit) {
+            setSave(false)
+            setEdit(false)
+            setOpen(false)
         }
-        getEstimates()
+    };
+    const handleSave = () => {
+        setSave(true)
     }
-
-    useEffect(() => {
-        newInformation()
-    }, []);
-
-    const deleteElement = (id) => {
-        const docRef = doc(db, `${uid}`, id);
-        // console.log(uid)
-        deleteDoc(docRef)
-            .then(() => {
-                console.log("Element sters")
-            })
-            .catch(error => {
-                console.log(error);
-            })
-        handleClose()
-        newInformation()
+    const editElement = () => {
+        setEdit(!edit)
     }
 
     const [step, setStep] = React.useState('client');
@@ -97,11 +111,13 @@ export default function EstimateClick({element, info, setInfo}) {
             setStep(newStep);
     };
 
-    return (
-        <div>
-            <React.Fragment sx={{display: 'grid'}}>
+    return (<div>
+            {!edit &&
+                <div>
+                    <React.Fragment sx={{display: 'grid'}}>
                 <span>
-                <Paper variant="outlined" sx={{my: {xs: 3, md: 1},
+                <Paper variant="outlined" sx={{
+                    my: {xs: 3, md: 1},
                     p: {xs: 1, md: 3},
                     display: 'flex',
                     justifyContent: 'space-between'
@@ -125,258 +141,184 @@ export default function EstimateClick({element, info, setInfo}) {
                 </Paper>
                 </span>
 
-            </React.Fragment>
+                    </React.Fragment>
 
-            <Dialog
-                fullScreen
-                open={open}
-                onClose={handleClose}
-                TransitionComponent={Transition}
-            >
-                <AppBar sx={{ position: 'relative' }}>
-                    <Toolbar>
-                        <IconButton
-                            edge="start"
-                            color="inherit"
-                            onClick={handleClose}
-                            aria-label="close"
+                    <Dialog
+                        fullScreen
+                        open={open}
+                        onClose={handleClose}
+                        TransitionComponent={Transition}
+                    >
+
+                        <AppBar sx={{position: 'relative'}}>
+                            <Toolbar>
+                                <IconButton
+                                    edge="start"
+                                    color="inherit"
+                                    onClick={handleClose}
+                                    aria-label="close"
+                                >
+                                    <CloseIcon/>
+                                </IconButton>
+                                <Typography sx={{ml: 2, flex: 1}} variant="h6" component="div">
+                                    {element.carData.plate}
+                                </Typography>
+
+                                <IconButton>
+                                    <EditIcon onClick={() => {
+                                        setEdit(!edit)
+                                    }}>
+                                    </EditIcon>
+                                </IconButton>
+                                <IconButton>
+                                    <DeleteIcon onClick={() => {
+                                        handleDelete()
+                                    }}>
+                                    </DeleteIcon>
+                                </IconButton>
+
+                            </Toolbar>
+                        </AppBar>
+                        {showConfirmDeleteDialog && <ConfirmDeleteAlert
+                            message="Sunteți sigur că doriți să ștergeți acest deviz? Această operație este permanentă."
+                            setJustRendered={setJustRendered}
+                            setShowConfirmDeleteDialog={setShowConfirmDeleteDialog}
+                            setConfirmDelete={setConfirmDelete}
+                            deleteElement={deleteElement}
+                            setOpenParent={setOpen}
+                            element = {element}
+                        />}
+                        <Grid container spacing={2}
+                              direction="row"
+                              justifyContent="center"
+                              alignItems="center"
+                              lg
                         >
-                            <CloseIcon />
-                        </IconButton>
-                        <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-                            {element.carData.plate}
-                        </Typography>
-                        <Button autoFocus color="inherit" onClick={handleClose}>
-                            save
-                        </Button>
-                        <IconButton>
-                            <DeleteIcon onClick={()=>deleteElement(element.id)}>
-                            </DeleteIcon>
-                        </IconButton>
-                    </Toolbar>
-                </AppBar>
-                <Grid container spacing={2}
-                      direction="row"
-                      justifyContent="start"
-                      alignItems="center"
-                      lg
+                            <Typography>
+                                aici va fi devizul ca document
+                            </Typography>
+                        </Grid>
+                    </Dialog>
+                </div>
+            }
+            {edit &&
+                <div>
+                    <React.Fragment sx={{display: 'grid'}}>
+                <span>
+                <Paper variant="outlined" sx={{
+                    my: {xs: 3, md: 1},
+                    p: {xs: 1, md: 3},
+                    display: 'flex',
+                    justifyContent: 'space-between'
+
+                }} onClick={handleClickOpen}
                 >
-                {/*navigation system*/}
-                    <Grid item xs="auto">
-                    <Container display="flex" component="main" maxWidth="xs" sx={{ mb: 4, justifyContent: 'space-between'}}>
-
-                            <StyledToggleButtonGroup
-                                size="small"
-                                value={step}
-                                exclusive
-                                onChange={handleStep}
-                                aria-label="text alignment"
-                                orientation="vertical"
-                                fullWidth
-                            >
-                                <ToggleButton value="client" aria-label="left aligned">
-                                    <Typography variant="h6" gutterBottom sx={{justifyContent: "center", display: 'block', paddingTop: "30px"}}>
-                                        Client
-                                    </Typography>
-                                </ToggleButton>
-                                <ToggleButton value="car" aria-label="left aligned">
-                                    <Typography variant="h6" gutterBottom sx={{justifyContent: "center", display: 'block', paddingTop: "30px"}}>
-                                        Autovehicul
-                                    </Typography>
-                                </ToggleButton>
-                                <ToggleButton value="clientReportedProblems" aria-label="left aligned">
-                                    <Typography variant="h6" gutterBottom sx={{justifyContent: "center", display: 'block', paddingTop: "30px"}}>
-                                        Descriere defectiuni
-                                    </Typography>
-                                </ToggleButton>
-                                <ToggleButton value="foundProblems" aria-label="left aligned">
-                                    <Typography variant="h6" gutterBottom sx={{justifyContent: "center", display: 'block', paddingTop: "30px"}}>
-                                        Cerinte de service
-                                    </Typography>
-                                </ToggleButton>
-
-                            </StyledToggleButtonGroup>
-
-                    </Container>
-                    </Grid>
-
-                    {/*/navigation system*/}
-
-                    <Grid item lg>
-                        <Container component="main" maxWidth="lg" sx={{ mb: 4, justifyContent: 'center',height: '100%', width: '100%'}}>
-
-                        {step==="client" && <Container >
-
-                            <Paper variant="outlined" sx={{my: {xs: 3, md: 1},
-                                p: {xs: 1, md: 3},
-                                display: 'flex',
-                                justifyContent: 'space-between'
-
-                            }}>
-                                <List>
-                                    <ListItem>
-                                        <ListItemText>
-                                            Numele clientului: {element.clientData.lastName} {element.clientData.firstName}
-                                        </ListItemText>
-                                    </ListItem>
-                                    <ListItem>
-                                        <ListItemText>
-                                            Adresa: {element.clientData.county}, {element.clientData.city}, {element.clientData.address}
-                                        </ListItemText>
-                                    </ListItem>
-                                    <ListItem>
-                                        <ListItemText>
-                                            Telefon: {element.clientData.phone}
-                                        </ListItemText>
-                                    </ListItem>
-
-                                    <ListItem>
-                                        <ListItemText>
-                                            E-mail: {element.clientData.email}
-                                        </ListItemText>
-                                    </ListItem>
 
 
-                                </List>
-                            </Paper>
-                        </Container>}
+                    <Typography>
+                        {element.carData.plate}
+                    </Typography>
 
-                        {step==="car" && <Container>
-
-                            <Paper variant="outlined" sx={{my: {xs: 3, md: 1},
-                                p: {xs: 1, md: 3},
-                                display: 'flex',
-                                justifyContent: 'space-between'
-
-                            }}>
-                                <List>
-                                    <ListItem>
-                                        <ListItemText>
-                                            Numar de inmatriculare: {element.carData.plate}
-                                        </ListItemText>
-                                    </ListItem>
-
-                                    <ListItem>
-                                        <ListItemText>
-                                            VIN: {element.carData.vin}
-                                        </ListItemText>
-                                    </ListItem>
-
-                                    <ListItem>
-                                        <ListItemText>
-                                            Marca: {element.carData.brand}
-                                        </ListItemText>
-                                    </ListItem>
-
-                                    <ListItem>
-                                        <ListItemText>
-                                            Model: {element.carData.model}
-                                        </ListItemText>
-                                    </ListItem>
-
-                                    <ListItem>
-                                        <ListItemText>
-                                            An fabricatie: {element.carData.year}
-                                        </ListItemText>
-                                    </ListItem>
-
-                                    <ListItem>
-                                        <ListItemText>
-                                            Corp caroserie: {element.carData.type}
-                                        </ListItemText>
-                                    </ListItem>
-
-                                    <ListItem>
-                                        <ListItemText>
-                                            Cod motor: {element.carData.code}
-                                        </ListItemText>
-                                    </ListItem>
-
-                                    <ListItem>
-                                        <ListItemText>
-                                            Capacitate cilindrica (cc): {element.carData.capacity}
-                                        </ListItemText>
-                                    </ListItem>
-
-                                    <ListItem>
-                                        <ListItemText>
-                                            Culoarea masinii: {element.carData.color}
-                                        </ListItemText>
-                                    </ListItem>
+                    <Typography>
+                        {element.clientData.lastName} {element.clientData.firstName}
+                    </Typography>
 
 
-                                    <ListItem>
-                                        <ListItemText>
-                                            Carburant: {element.carData.fuel}
-                                        </ListItemText>
-                                    </ListItem>
-                                </List>
-                            </Paper>
-                        </Container>}
+                    <Typography>
+                        {element.date}
+                    </Typography>
+                </Paper>
+                </span>
 
-                        {step==="clientReportedProblems" && <Container>
+                    </React.Fragment>
 
-                            <Paper variant="outlined" sx={{my: {xs: 3, md: 1},
-                                p: {xs: 1, md: 3},
-                                display: 'flex',
-                                justifyContent: 'space-between'
-
-                            }}>
-                                <List>
-                                    {element.problemsData.problems.map(
-                                        (problem) => {
-                                            return(
-                                                <ListItem>
-                                                    {problem}
-                                                </ListItem>
-                                            )
-                                        }
-                                    )}
-
-                                </List>
-                            </Paper>
-                        </Container>}
-                        {step==="foundProblems" && <Container>
-
-                            <Paper variant="outlined" sx={{my: {xs: 3, md: 1},
-                                p: {xs: 1, md: 3},
-                                display: 'flex',
-                                justifyContent: 'space-between'
-
-                            }}>
-                                <List>
-                                    {element.foundProblemsData.problems.map(
-                                        (problem) => {
-                                            return(
-                                                <ListItem>
-                                                    {problem}
-                                                </ListItem>
-                                            )
-                                        }
-                                    )}
-
-                                </List>
-                            </Paper>
-                        </Container>}
-                        </Container>
-
-                    </Grid>
-
-                </Grid>
+                    <Dialog
+                        fullScreen
+                        open={open}
+                        onClose={handleClose}
+                        TransitionComponent={Transition}
+                    >
+                        <AppBar sx={{position: 'relative'}}>
+                            <Toolbar>
+                                <IconButton
+                                    edge="start"
+                                    color="inherit"
+                                    onClick={handleClose}
+                                    aria-label="close"
+                                >
+                                    <CloseIcon/>
+                                </IconButton>
+                                <Typography sx={{ml: 2, flex: 1}} variant="h6" component="div">
+                                    {element.carData.plate}
+                                </Typography>
+                                <Button autoFocus color="inherit" onClick={handleSave}>
+                                    save
+                                </Button>
 
 
+                            </Toolbar>
+                        </AppBar>
+                        {!justRendered && showConfirmDialog && <ConfirmCloseAlert
+                            message="Sunteți sigur că doriți să închideți această fereastră? Orice modificare nesalvată se va pierde"
+                            setJustRendered={setJustRendered}
+                            setConfirmClose={setConfirmClose}
+                            setShowConfirmDialog={setShowConfirmDialog}
+                            showConfirmDialog={showConfirmDialog}
+                            setOpenParent={setOpen}
+                            setSave={setSave}
+                            setEdit={setEdit}
+                        />}
+
+                        <Grid container spacing={2}
+                              direction="row"
+                              justifyContent="start"
+                              alignItems="center"
+                              lg
+                        >
+                            {/*navigation system*/}
+                            <Grid item xs="auto">
+                                <Container display="flex" component="main" maxWidth="xs"
+                                           sx={{mb: 4, justifyContent: 'space-between'}}>
+
+                                    <StyledToggleButtonGroup
+                                        size="small"
+                                        value={step}
+                                        exclusive
+                                        onChange={handleStep}
+                                        aria-label="text alignment"
+                                        orientation="vertical"
+                                        fullWidth
+                                    >
+                                        {steps.map((element) => {
+                                            return <ToggleButton value={element} aria-label="left aligned" sx={{height: '7vh', justifyContent: 'center', alignItems: 'center'}}>
+                                                <Typography variant="h6" gutterBottom
+                                                            sx={{justifyContent: "center", display: 'block', paddingTop: "3.5vh"}}>
+                                                    {stepsDict[element]}
+                                                </Typography>
+                                            </ToggleButton>
+                                        })}
+
+                                    </StyledToggleButtonGroup>
+
+                                </Container>
+                            </Grid>
+
+                            {/*/navigation system*/}
+                            <Grid item lg>
+                                <Container>
 
 
+                                        <EditEstimate element = {element} step = {step} info = {info} setInfo={setInfo} save = {save} setSave = {setSave}
+                                            setEdit = {setEdit} handleClose = {handleClose} setJustRendered = {setJustRendered}
+                                                      setShowConfirmDialog = {setShowConfirmDialog}
+                                        />
+                                </Container>
+                            </Grid>
+                        </Grid>
+                    </Dialog>
+                </div>
+            }
+    </div>
 
-
-
-
-
-
-
-
-
-            </Dialog>
-        </div>
     );
 }

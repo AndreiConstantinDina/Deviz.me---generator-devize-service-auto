@@ -42,7 +42,7 @@ export default function CarType({carData, setCarData}) {
     return (
         <Box sx={{ minWidth: 120 }}>
             <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Corp</InputLabel>
+                <InputLabel id="demo-simple-select-label">Caroserie</InputLabel>
                 <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"

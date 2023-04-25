@@ -16,22 +16,25 @@ import PublicRoute from "./components/PublicRoute";
 import  secureLocalStorage  from  "react-secure-storage";
 import {useEffect} from "react";
 import Home from "./components/home/Home";
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
 const router = createBrowserRouter([
     {
         path: "/",
         element: <RootPage />,
         children: [
             {
-                path: "istoric-devize",
+                path: "devize",
                 element: <PrivateRoute component={Estimates}></PrivateRoute>
             },
             {
                 path: "creare-deviz",
+                onLeave: "sigur?",
                 element:  <PrivateRoute component={CarEstimate}></PrivateRoute>
             },
 
             {
-                path: "about",
+                path: "acasa",
                 element:  <PrivateRoute component={Home}></PrivateRoute>
             },
 
@@ -43,7 +46,6 @@ const router = createBrowserRouter([
                 path: "",
                 // element:  <Home />
                 element:  <PublicRoute component={LogIn}></PublicRoute>
-
             },
 
             {
@@ -61,11 +63,20 @@ function App() {
         secureLocalStorage.setItem("logged-in", false);
 
     }, []);
-    return(
-        <AuthProvider>
 
-                <RouterProvider router={router} />
-        </AuthProvider>
+    const theme = createTheme({
+        typography : {
+            fontFamily: 'Exo 2'
+        }
+    });
+
+    return(
+        <ThemeProvider theme={theme}>
+
+            <AuthProvider>
+                    <RouterProvider router={router} />
+            </AuthProvider>
+        </ThemeProvider>
     )
 
 

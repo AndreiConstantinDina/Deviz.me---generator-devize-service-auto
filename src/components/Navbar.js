@@ -8,16 +8,17 @@ import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
+import EditIcon from '@mui/icons-material/Edit';
 import MenuItem from '@mui/material/MenuItem';
 import { Link } from "react-router-dom";
 import {useAuth} from "../contexts/AuthContext";
 import {useState} from 'react'
 
-const pages = ['Istoric devize', 'Crează deviz nou', 'Despre noi'];
+const pages = ['Devize', 'Crează deviz nou', 'Acasă'];
 const links = {
-    'Istoric devize': "/istoric-devize",
+    'Devize': "/devize",
     'Crează deviz nou': "/creare-deviz",
-    'Despre noi': "/about"
+    'Acasă': "/acasa"
 }
 function Navbar() {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -37,10 +38,10 @@ function Navbar() {
     if (currentUser)
     return (
 
-        <AppBar position="static">
+        <AppBar position="static" >
             <Container maxWidth="xl">
-                <Toolbar disableGutters>
-                    <Link to="/istoric-devize" style= {{ textDecoration: 'none', color: "white"}} >
+                <Toolbar disableGutters >
+                    <Link to="/devize" style= {{ textDecoration: 'none', color: "white"}} >
 
                     <Typography
                         variant="h6"
