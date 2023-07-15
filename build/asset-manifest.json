@@ -1,15 +1,30 @@
 {
   "files": {
-    "main.css": "/github.io/proiect-deviz/static/css/main.073c9b0a.css",
-    "main.js": "/github.io/proiect-deviz/static/js/main.34cde6b8.js",
-    "static/js/787.005f4f17.chunk.js": "/github.io/proiect-deviz/static/js/787.005f4f17.chunk.js",
-    "index.html": "/github.io/proiect-deviz/index.html",
-    "main.073c9b0a.css.map": "/github.io/proiect-deviz/static/css/main.073c9b0a.css.map",
-    "main.34cde6b8.js.map": "/github.io/proiect-deviz/static/js/main.34cde6b8.js.map",
-    "787.005f4f17.chunk.js.map": "/github.io/proiect-deviz/static/js/787.005f4f17.chunk.js.map"
+    "main.css": "./static/css/main.cdad93e4.css",
+    "main.js": "./static/js/main.ad67cc9f.js",
+    "static/js/703.4a7dee53.chunk.js": "./static/js/703.4a7dee53.chunk.js",
+    "static/js/513.961f689f.chunk.js": "./static/js/513.961f689f.chunk.js",
+    "static/js/787.005f4f17.chunk.js": "./static/js/787.005f4f17.chunk.js",
+    "static/media/mechanic-empty-details-list.png": "./static/media/mechanic-empty-details-list.186dc3f614e035eb332a.png",
+    "static/media/mechanic-empty-recommendations-list.png": "./static/media/mechanic-empty-recommendations-list.c71e677055013e8db7c6.png",
+    "static/media/mechanic-empty-client-service-problems-list.png": "./static/media/mechanic-empty-client-service-problems-list.5f9de01860a6740138fe.png",
+    "static/media/mechanic-empty-final-verifications-list.png": "./static/media/mechanic-empty-final-verifications-list.05f14a20e6eb57c69ae9.png",
+    "static/media/mechanic-empty-requirements-list.png": "./static/media/mechanic-empty-requirements-list.d4a8922bc27e0c3ccb68.png",
+    "static/media/mechanic-empty-parts-list.png": "./static/media/mechanic-empty-parts-list.fc1dd15e256f9484c96a.png",
+    "static/media/mechanic-empty-services-list.png": "./static/media/mechanic-empty-services-list.087ed99b5052e696c1e9.png",
+    "static/media/mechanic-empty-service-problems-list.png": "./static/media/mechanic-empty-service-problems-list.40237902f0c31d1cd358.png",
+    "static/media/mechanic-empty-client-problems-list.png": "./static/media/mechanic-empty-client-problems-list.bbf854f2713b7c9f3d70.png",
+    "static/media/mechanic-empty-hourly-labours-list.png": "./static/media/mechanic-empty-hourly-labours-list.4a712a3b5b2d3096240b.png",
+    "static/media/mechanic-empty-labour-list.png": "./static/media/mechanic-empty-labour-list.bab5bef53dff162d9534.png",
+    "index.html": "./index.html",
+    "main.cdad93e4.css.map": "./static/css/main.cdad93e4.css.map",
+    "main.ad67cc9f.js.map": "./static/js/main.ad67cc9f.js.map",
+    "703.4a7dee53.chunk.js.map": "./static/js/703.4a7dee53.chunk.js.map",
+    "513.961f689f.chunk.js.map": "./static/js/513.961f689f.chunk.js.map",
+    "787.005f4f17.chunk.js.map": "./static/js/787.005f4f17.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.073c9b0a.css",
-    "static/js/main.34cde6b8.js"
+    "static/css/main.cdad93e4.css",
+    "static/js/main.ad67cc9f.js"
   ]
 }

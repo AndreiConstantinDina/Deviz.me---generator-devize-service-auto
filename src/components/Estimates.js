@@ -18,12 +18,13 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import EstimateClick from "./EstimateClick";
 import {useRef, useState} from "react";
-import {db} from './authentification/firebase'
+import {db, storage} from './authentification/firebase'
 import {useEffect} from "react";
-import {collection, getDocs, doc, deleteDoc} from "@firebase/firestore";
+import {collection, getDocs, doc, deleteDoc, setDoc, getDoc} from "@firebase/firestore";
 
 import {useAuth} from "../contexts/AuthContext";
 import SuccessSnackBar from "./alerts/SuccessSnackBar";
+import {getDownloadURL, ref, uploadBytes} from "firebase/storage";
 
 
 const theme = createTheme();
@@ -48,11 +49,12 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
 }));
 
 function Estimates() {
-    const currentUser = useAuth().currentUser
-    const uid = currentUser.uid
+    let data = ""
+    let currentUser = useAuth().currentUser
+    let uid = useAuth().currentUser.uid
     const [info, setInfo] =  useState([]);
     const [deletedEstimate, setDeletedEstimate] = useState(false)
-    const estimatesRef = collection(db, `${uid}`) // luam colectia de devize din firestore
+    let estimatesRef = collection(db, `${uid}`) // luam colectia de devize din firestore
     const [pageRefreshed, setPageRefreshed] = useState(false)
 
 
@@ -63,11 +65,61 @@ function Estimates() {
         }
         getEstimates()
     }
+    const [usersData, setUsersData] =  useState({});
+
+    const [company, setCompany] = useState("");
+    const [address, setAddress] = useState("");
+    const [workAddress, setWorkAddress] = useState("");
+    const [CUI, setCUI] = useState("");
+    const [comerceRegisterNumber, setComerceRegisterNumber] = useState("");
+    const [bank, setBank] = useState("");
+    const [IBAN, setIBAN] = useState("");
+
+    const [imageUpload, setImageUpload] = useState(null);
+    const [URL, setURL] = useState("");
+
+    const storageRef = ref(storage,`images/${uid}`)
+
 
     useEffect(() => {
         newInformation()
         setPageRefreshed(true)
-        console.log(info)
+        let docRef = null
+        let docSnap = null
+        // uid = currentUser.uid
+        // estimatesRef = collection(db, `${uid}`)
+
+        getDownloadURL(storageRef).then((currentURL) => {
+            setURL(currentURL);
+        })
+
+            .catch((error)=>{
+            })
+
+        const getUsersData = async () => {
+            try{
+                docRef = await doc(db, "Users", uid)
+                docSnap = await getDoc(docRef);
+            }
+            catch(e){
+            }
+            finally {
+            }
+        }
+
+        getUsersData().then(()=> {
+            data = docSnap.data()
+            // setUsersData(data)
+            setUsersData(data)
+            setCompany(data.company)
+            setIBAN(data.IBAN)
+            setBank(data.bank)
+            setCUI(data.CUI)
+            setComerceRegisterNumber(data.comerceRegisterNumber)
+            setWorkAddress(data.workAddress)
+            setAddress(data.address)
+
+        })
     }, []);
 
     const deleteElement = (id) => {
@@ -78,7 +130,6 @@ function Estimates() {
                 setPageRefreshed(false)
             })
             .catch(error => {
-                console.log(error);
             })
         const findID = (el) => el.id === id
         info.splice(info.findIndex(findID), 1)
@@ -103,16 +154,7 @@ function Estimates() {
                         onChange={handleAlignment}
                         aria-label="text alignment"
                     >
-                        <ToggleButton value="open" aria-label="left aligned">
-                            <Typography variant="h5" gutterBottom sx={{justifyContent: "center", display: 'block', paddingTop: "30px"}}>
-                                Devize active
-                            </Typography>
-                        </ToggleButton>
-                        <ToggleButton value="closed" aria-label="right aligned">
-                            <Typography variant="h5" gutterBottom sx={{justifyContent: "center", display: 'block', paddingTop: "30px"}}>
-                                Devize închise
-                            </Typography>
-                        </ToggleButton>
+
                     </StyledToggleButtonGroup>
 
             </Container>
@@ -132,7 +174,7 @@ function Estimates() {
                 {info.map((element) => {
                     return(
                     <div sx={{display: 'grid'}}>
-                        <EstimateClick element = {element} info = {info} setInfo= {setInfo} deleteElement={deleteElement}/>
+                        <EstimateClick element = {element} info = {info} setInfo= {setInfo} deleteElement={deleteElement} usersData = {usersData} URL = {URL}/>
                     </div>)
                     }
                 )}

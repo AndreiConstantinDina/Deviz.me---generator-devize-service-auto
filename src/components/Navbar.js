@@ -38,7 +38,7 @@ function Navbar() {
     if (currentUser)
     return (
 
-        <AppBar position="static" >
+        <AppBar position="sticky" >
             <Container maxWidth="xl">
                 <Toolbar disableGutters >
                     <Link to="/devize" style= {{ textDecoration: 'none', color: "white"}} >
@@ -58,7 +58,7 @@ function Navbar() {
                             textDecoration: 'none',
                         }}
                     >
-                        deviz.me
+                        devize-auto.ro
                     </Typography>
 
                     </Link>
@@ -79,10 +79,20 @@ function Navbar() {
                         ))}
                     </Box>
                     {
-                        currentUser && <Typography>
-                            {currentUser.email}
-                        </Typography>
+                        currentUser &&
+                        <Link to={"profil"} style={{ textDecoration: 'none' }}>
+
+                            <Button
+                                key='profile'
+
+                                sx={{ my: 2, color: 'white', display: 'block' }}
+                            >
+                                {currentUser.email}
+                            </Button>
+
+                        </Link>
                     }
+
                     {
                         currentUser && <Button
                         onClick = {handleLogOut}

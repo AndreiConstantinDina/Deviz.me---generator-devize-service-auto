@@ -11,10 +11,7 @@ import axios from 'axios'
 
 
 export default function CarModel({carData, setCarData}) {
-
     const [carModels, setCarModels] = useState([])
-    const brand = carData.brand
-    //getAllCarBrands().forEach(item => carBrands.push(item));
     useEffect(() =>{
         const where = encodeURIComponent(JSON.stringify({
             "Make": `${carData.brand}`
@@ -25,7 +22,6 @@ export default function CarModel({carData, setCarData}) {
                 'X-Parse-REST-API-Key': 'FW5kVmVUSIkjlhrCsa2l4rJFsK3XKjPhhjfSl8X0', // This is your app's REST API key
             }
         })
-            //.then(res => {res.data.results.forEach(element => console.log(element.Make))}) // this prints all makes
             .then(res => {
                 setCarModels(res.data.results.reduce((accumulator, current) => {
                     if (!accumulator.find((item) => item.Model === current.Model)) {

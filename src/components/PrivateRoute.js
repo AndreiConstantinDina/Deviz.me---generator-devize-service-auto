@@ -6,16 +6,13 @@ import  secureLocalStorage  from  "react-secure-storage";
 import LogIn from "./authentification/LogIn";
 function PrivateRoute ({ component: Component, ...rest}) {
 
-    const {user} = useAuth()
-    console.log(user)
+    const user = useAuth()
     if (!secureLocalStorage.getItem("logged-in"))
         return (
-            <Navigate redirect to = "/log-in"/>
+            <Navigate redirect to="/log-in"/>
         )
     else
         return <Component/>
-
-
 }
 
 export default PrivateRoute;

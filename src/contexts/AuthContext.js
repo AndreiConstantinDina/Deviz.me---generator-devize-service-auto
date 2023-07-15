@@ -4,14 +4,12 @@ import LogIn from "../components/authentification/LogIn";
 import Register from "../components/authentification/Register";
 import  secureLocalStorage  from  "react-secure-storage";
 
-
-
-
 const AuthContext = React.createContext()
 
 export function useAuth(){
     return useContext(AuthContext)
 }
+
 export function AuthProvider({ children }){
     const [currentUser, setCurrentUser] = useState()
     const [loading, setLoading] = useState(true)
@@ -47,7 +45,6 @@ export function AuthProvider({ children }){
     return(
         <AuthContext.Provider value = { value }>
             {children}
-            {/*{currentUser ? children : <div><LogIn/><Register/></div>}*/}
         </AuthContext.Provider>
     )
 }

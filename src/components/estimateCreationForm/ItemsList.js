@@ -37,7 +37,6 @@ export default function ItemsList({itemsData, setItemsData, requirementsLabourDa
 
     return (
         <List sx={{ width: '100%',
-            maxWidth: 360,
             bgcolor: 'background.paper' ,
             alignItems: 'flex-start' ,
             paddingLeft: '20px'

@@ -104,7 +104,8 @@ export default function CarEstimate() {
         capacity: '',
         motorCode: '',
         fuel: '',
-        color: ''
+        color: '',
+        kw: ''
     });
 
     const [problemsData, setProblemsData] = useState({

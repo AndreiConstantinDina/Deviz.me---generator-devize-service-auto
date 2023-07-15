@@ -36,7 +36,6 @@ export default function ServicesList({itemsData, setItemsData, requirementsLabou
 
     return (
         <List sx={{ width: '100%',
-            maxWidth: 360,
             bgcolor: 'background.paper' ,
             alignItems: 'flex-start' ,
             paddingLeft: '20px'

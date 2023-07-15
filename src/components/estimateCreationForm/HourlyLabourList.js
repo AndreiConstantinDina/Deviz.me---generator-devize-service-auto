@@ -34,8 +34,7 @@ export default function HourlyLabourList({itemsData, setItemsData, requirementsL
     }
 
     return (
-        <List sx={{ width: '100%',
-            maxWidth: 360,
+        <List sx={{ width: 'auto',
             bgcolor: 'background.paper' ,
             alignItems: 'flex-start' ,
             paddingLeft: '20px'

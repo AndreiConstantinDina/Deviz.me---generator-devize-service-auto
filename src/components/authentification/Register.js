@@ -23,7 +23,7 @@ function Copyright(props) {
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
             <Link color="inherit" href="src/components#">
-                Deviz.me
+                devize-auto.ro
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -42,18 +42,14 @@ export default function Register() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
 
-        if (data.get('password') !== data.get('password-confirm')){
-            return setError("Parolele nu sunt identice!")
+        if (data.get("email") === "" || data.get("password") === "" || data.get("password-confirm") === "" || data.get("firstName") === ""  || data.get("lastName") === "" ){
+            return setError("Toate câmpurile trebuie completate.")
         }
 
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-            passwordConfirm: data.get('password-confirm'),
-            firstName: data.get('firstName'),
-            lastName: data.get('lastName'),
+        if (data.get('password') !== data.get('password-confirm')){
+            return setError("Parolele nu coincid!")
+        }
 
-        });
         try{
             setError('')
             setLoading(true)
@@ -159,7 +155,7 @@ export default function Register() {
                             </Grid>
                         </Grid>
                     </Box>
-                    {error && <Alert severity={'error'}> {error} </Alert> }
+                    {error && <Alert severity={'error'} sx={{marginTop: "3vh"}}> {error} </Alert> }
                 </Box>
                 <Copyright sx={{ mt: 5 }} />
             </Container>

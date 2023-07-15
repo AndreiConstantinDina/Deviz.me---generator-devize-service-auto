@@ -11,7 +11,7 @@ import {TextField, MenuItem, Select, InputLabel, FormControl, FormControlLabel, 
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 
-export default function PartsList({partsData, setPartsData, showCode, showMaker, showInfo, setShowCode, setShowMaker, setShowInfo}) {
+export default function PartsList({partsData, setPartsData, showCode, showMaker, showInfo, setShowCode, setShowMaker, setShowInfo, enableDelete}) {
     const handlePartDelete = (value) => {
         var parts = partsData.parts.slice(0)
         const index = parts.indexOf(value)
@@ -42,7 +42,7 @@ export default function PartsList({partsData, setPartsData, showCode, showMaker,
                         alignItems: "center",
                         margin: '1vh',
                         borderRadius: '5px',
-                        width: '60vw'
+                        width: '60vw',
                     }}
                 >
                     <Grid container spacing={0} direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
@@ -168,8 +168,10 @@ export default function PartsList({partsData, setPartsData, showCode, showMaker,
 
 
                             <IconButton>
-                                <DeleteIcon onClick={() => {handlePartDelete(part)}}>
-                                </DeleteIcon>
+                                {enableDelete!== "false" && <DeleteIcon onClick={() => {
+                                    handlePartDelete(part)
+                                }}>
+                                </DeleteIcon>}
                             </IconButton>
                         </Grid>
                     </Grid>

@@ -15,6 +15,7 @@ import Paper from "@mui/material/Paper";
 import Container from "@mui/material/Container";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from "@mui/icons-material/Delete";
+import DownloadIcon from '@mui/icons-material/Download';
 import {collection, deleteDoc, doc, getDocs} from "@firebase/firestore";
 import {useEffect, useState} from "react";
 import {db} from "./authentification/firebase";
@@ -27,12 +28,15 @@ import {TextField} from "@mui/material";
 import EditEstimate from "./EditEstimate"
 import ConfirmCloseAlert from "./alerts/ConfirmCloseAlert";
 import ConfirmDeleteAlert from "./alerts/ConfirmDeleteAlert";
-
+import EstimatePreview from "./invoiceGenerator/EstimatePreview";
+import {useReactToPrint} from "react-to-print";
+import {useRef} from "react";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
-
 
 const steps = ['client', 'car', 'problemsDescription', 'serviceRequirements', 'reception', 'repairRequirements', 'parts', 'labour', 'recommendations']
 
@@ -68,7 +72,7 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
     },
 }));
 
-export default function EstimateClick({element, info, setInfo, deleteElement}) {
+export default function EstimateClick({element, info, setInfo, deleteElement, usersData, URL}) {
     const currentUser = useAuth().currentUser
     const [open, setOpen] = React.useState(false);
     const [edit, setEdit] = React.useState(false)
@@ -109,6 +113,33 @@ export default function EstimateClick({element, info, setInfo, deleteElement}) {
     const handleStep = (event, newStep) => {
         if (newStep)
             setStep(newStep);
+    };
+
+    const previewDocumentRef = useRef();
+
+
+    const downloadEstimate = () => {
+        const input = previewDocumentRef.current;
+
+        html2canvas(input
+            // , {allowTaint: true, foreignObjectRendering: true, scrollY: -window.scrollY}
+        ).then((canvas) => {
+            const imgWidth = 208;
+            const pageHeight = 295;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            let heightLeft = imgHeight;
+            let position = 0;
+            heightLeft -= pageHeight;
+            const doc = new jsPDF('p', 'mm');
+            doc.addImage(canvas, 'PNG', 0, position, imgWidth, imgHeight, '', 'FAST');
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight;
+                doc.addPage();
+                doc.addImage(canvas, 'PNG', 0, position, imgWidth, imgHeight, '', 'FAST');
+                heightLeft -= pageHeight;
+            }
+            doc.save(element.carData.plate + ".pdf");
+        });
     };
 
     return (<div>
@@ -163,6 +194,12 @@ export default function EstimateClick({element, info, setInfo, deleteElement}) {
                                 <Typography sx={{ml: 2, flex: 1}} variant="h6" component="div">
                                     {element.carData.plate}
                                 </Typography>
+                                <IconButton>
+                                    <DownloadIcon onClick={() => {
+                                        downloadEstimate()
+                                    }}>
+                                    </DownloadIcon>
+                                </IconButton>
 
                                 <IconButton>
                                     <EditIcon onClick={() => {
@@ -176,6 +213,8 @@ export default function EstimateClick({element, info, setInfo, deleteElement}) {
                                     }}>
                                     </DeleteIcon>
                                 </IconButton>
+
+
 
                             </Toolbar>
                         </AppBar>
@@ -194,11 +233,48 @@ export default function EstimateClick({element, info, setInfo, deleteElement}) {
                               alignItems="center"
                               lg
                         >
-                            <Typography>
-                                aici va fi devizul ca document
-                            </Typography>
+
+                            <Paper variant="outlined" sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                marginLeft: '10vw',
+                                marginRight: '10vw',
+                                marginTop: '10vh',
+                                marginBottom: '10vh',
+
+                            }}>
+                            <EstimatePreview partsData={element.partsData}
+                                             carData={element.carData}
+                                             problemsData={element.problemsData}
+                                             foundProblemsData={element.foundProblemsData}
+                                             receptionData={element.receptionData}
+                                             problemsDict={element.problemsDict}
+                                             hourlyLabourData={element.hourlyLabourData}
+                                             servicesData={element.servicesData}
+                                             finalVerificationsData={element.finalVerificationsData}
+                                             partsDiscountType={element.partsDiscountType}
+                                             partsDiscount={element.partsDiscount}
+                                             labourDiscountType={element.labourDiscountType}
+                                             labourDiscount={element.labourDiscount}
+                                             recommendationsData={element.recommendationsData}
+                                             previewDocumentRef = {previewDocumentRef}
+                                             clientData={element.clientData}
+                                             usersData = {usersData}
+                                             URL = {URL}
+                                             date = {element.date}
+                            />
+
+
+                                {/*<button onClick={handlePrint}>Download</button>*/}
+
+
+                            </Paper>
+
+
                         </Grid>
                     </Dialog>
+
+
                 </div>
             }
             {edit &&
@@ -256,6 +332,7 @@ export default function EstimateClick({element, info, setInfo, deleteElement}) {
                                 </Button>
 
 
+
                             </Toolbar>
                         </AppBar>
                         {!justRendered && showConfirmDialog && <ConfirmCloseAlert
@@ -269,52 +346,53 @@ export default function EstimateClick({element, info, setInfo, deleteElement}) {
                             setEdit={setEdit}
                         />}
 
-                        <Grid container spacing={2}
+                        <Grid container spacing={6}
                               direction="row"
                               justifyContent="start"
-                              alignItems="center"
+                              alignItems="start"
                               lg
                         >
                             {/*navigation system*/}
-                            <Grid item xs="auto">
+
+                            <Grid item width={'30vw'} sx={{justifyContent: 'start', position: 'static'}}>
                                 <Container display="flex" component="main" maxWidth="xs"
-                                           sx={{mb: 4, justifyContent: 'space-between'}}>
+                                >
 
                                     <StyledToggleButtonGroup
                                         size="small"
                                         value={step}
                                         exclusive
                                         onChange={handleStep}
-                                        aria-label="text alignment"
                                         orientation="vertical"
                                         fullWidth
                                     >
                                         {steps.map((element) => {
-                                            return <ToggleButton value={element} aria-label="left aligned" sx={{height: '7vh', justifyContent: 'center', alignItems: 'center'}}>
+                                            return <ToggleButton value={element} sx={{height: '7vh', justifyContent: 'start', alignItems: 'center', marginBottom: '99vh'}}>
                                                 <Typography variant="h6" gutterBottom
-                                                            sx={{justifyContent: "center", display: 'block', paddingTop: "3.5vh"}}>
+                                                            sx={{justifyContent: "center", display: 'block', paddingTop: "3.5vh", textTransform: 'none'}}>
                                                     {stepsDict[element]}
                                                 </Typography>
                                             </ToggleButton>
                                         })}
-
                                     </StyledToggleButtonGroup>
 
                                 </Container>
                             </Grid>
 
                             {/*/navigation system*/}
-                            <Grid item lg>
-                                <Container>
 
+                            {/*content*/}
 
+                             <Grid item width={'60vw'} marginTop={"10vh"}>
                                         <EditEstimate element = {element} step = {step} info = {info} setInfo={setInfo} save = {save} setSave = {setSave}
                                             setEdit = {setEdit} handleClose = {handleClose} setJustRendered = {setJustRendered}
                                                       setShowConfirmDialog = {setShowConfirmDialog}
                                         />
-                                </Container>
                             </Grid>
+                            {/*content*/}
+
                         </Grid>
+
                     </Dialog>
                 </div>
             }

@@ -21,7 +21,7 @@ function Copyright(props) {
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
             <Link color="inherit" href="/">
-                Deviz.me
+               devize-auto.ro
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -40,10 +40,6 @@ export default function LogIn() {
     async function handleSubmit (event){
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
         try{
             setError('')
             setLoading(true)
@@ -70,7 +66,7 @@ export default function LogIn() {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Intra în cont
+                        Intră în cont
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                         <TextField
@@ -119,7 +115,7 @@ export default function LogIn() {
                             </Grid>
                         </Grid>
                     </Box>
-                    {error && <Alert severity={'error'}> {error} </Alert> }
+                    {error && <Alert severity={'error'} sx={{marginTop: "3vh"}}> {error} </Alert> }
                 </Box>
                 <Copyright sx={{ mt: 8, mb: 4 }} />
             </Container>

@@ -56,6 +56,7 @@ function AddProblem({problemsData, setProblemsData, addProblemLabel, helperText,
                             ...problemsData,
                             newProblem: event.target.value
                         })}
+
                     />}
                 />
 
@@ -65,6 +66,7 @@ function AddProblem({problemsData, setProblemsData, addProblemLabel, helperText,
 
                 <Button variant="outlined"
                         onClick={() => {handleAddNewProblem()}}
+
                 >
 
                     Adaugă</Button>

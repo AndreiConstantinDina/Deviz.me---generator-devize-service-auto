@@ -42,12 +42,13 @@ export default function CarDetails({carData, setCarData, error}) {
                         error = {error !== "" && carData.plate === ""}
                         label="Numar de înmatriculare"
                         fullWidth
-                        variant="standard"
                         defaultValue={carData.plate}
-                        onChange={(event) =>
+                        onChange={(event) => {
+                            event.target.value = event.target.value.toString().toUpperCase()
+                            event.target.value = event.target.value.toString().replace(/[^a-zA-Z0-9]/i, '')
 
-                            setCarData ({...carData, plate: event.target.value})
-
+                            setCarData({...carData, plate: event.target.value})
+                        }
                         }
                         inputProps={{ style: { textTransform: "uppercase" } }}
                         // textTransform = "uppercase"
@@ -60,9 +61,13 @@ export default function CarDetails({carData, setCarData, error}) {
                         id="vin"
                         label="Serie de șasiu/ VIN"
                         fullWidth
-                        variant="standard"
                         defaultValue={carData.vin}
-                        onChange={(event) => setCarData ({...carData, vin: event.target.value})}
+                        onChange={(event) => {
+                            event.target.value = event.target.value.toString().toUpperCase()
+                            event.target.value = event.target.value.toString().replace(/[^a-zA-Z0-9]/i, '')
+                            setCarData({...carData, vin: event.target.value})
+                        }
+                    }
                     />
                 </Grid>
 
@@ -88,9 +93,13 @@ export default function CarDetails({carData, setCarData, error}) {
                             id="motorCode"
                             label="Cod Motor"
                             fullWidth
-                            variant="standard"
                             defaultValue = {carData.motorCode}
-                            onChange={(event) => setCarData ({...carData, motorCode: event.target.value})}
+                            onChange={(event) => {
+                                event.target.value = event.target.value.toString().toUpperCase()
+                                setCarData({...carData, motorCode: event.target.value})
+                            }
+
+                        }
                         />
                     </Grid>
 
@@ -100,29 +109,26 @@ export default function CarDetails({carData, setCarData, error}) {
                             id="capacity"
                             label="Capacitate cilidrica (cc)"
                             fullWidth
-                            variant="standard"
                             defaultValue={ carData.capacity}
-                            onChange={(event) => setCarData ({...carData, capacity: event.target.value})}
+                            onChange={(event) => {
+                                event.target.value = event.target.value.toString().replace(/\D/g, '')
+                                setCarData({...carData, capacity: event.target.value})
+                            }                        }
                         />
                     </Grid>
 
                 <Grid item xs={12} md={6}>
-                    <Box sx={{ minWidth: 120 }}>
-                        <FormControl fullWidth>
-                            <InputLabel>Culoare</InputLabel>
-                            <Select
-                                value={carData.color}
-                                label="color"
-                                defaultValue={carData.color}
-                                onChange={(event) => setCarData ({...carData, color: event.target.value})}
-                            >
-                                {
-                                    ['🔴','🟠', '🟡', "🟢", "🔵", "🟣", "🟤", "⚫", "⚪"].map(item => <MenuItem value={item}>{item}</MenuItem>)
-                                }
-
-                            </Select>
-                        </FormControl>
-                    </Box>
+                    <TextField
+                        optional
+                        id="kw"
+                        label="Putere (kW)"
+                        fullWidth
+                        defaultValue={ carData.kw}
+                        onChange={(event) => {
+                            event.target.value = event.target.value.toString().replace(/\D/g, '')
+                            setCarData({...carData, kw: event.target.value})
+                        }                        }
+                    />
                 </Grid>
 
                 <Grid item xs={12} md={6}>

@@ -9,22 +9,8 @@ import {useState, setState} from "react";
 
 export default function ClientDetails({clientData, setClientData, error}) {
 
-    // const [clientData, setClientData] = useState({
-    //     lastName: '',
-    //     firstName: '',
-    //     email: '',
-    //     phone: '',
-    //     address: '',
-    //     city: '',
-    //     county: '',
-    //     country: 'Romania'
-    // })
-
     return (
         <React.Fragment>
-            {/*<Typography variant="h6" gutterBottom>*/}
-            {/*    Introduceți datele clientului:*/}
-            {/*</Typography>*/}
             <Grid container spacing={3}>
                 <Grid item xs={12} sm={6}>
                     <TextField
@@ -33,10 +19,11 @@ export default function ClientDetails({clientData, setClientData, error}) {
                         label="Nume"
                         fullWidth
                         autoComplete="family-name"
-                        variant="standard"
                         defaultValue={clientData.lastName}
-                        onChange = { (event) =>
+                        onChange = { (event) => {
+                            event.target.value = event.target.value.toString().replace(/[^a-zA-Z ]/i, '')
                             setClientData({...clientData, lastName: event.target.value})
+                            }
                         }
                     />
                 </Grid>
@@ -48,11 +35,13 @@ export default function ClientDetails({clientData, setClientData, error}) {
                         label="Prenume"
                         fullWidth
                         autoComplete="given-name"
-                        variant="standard"
                         defaultValue={clientData.firstName}
-                        onChange = { (event) =>
+                        onChange = { (event) => {
+                            event.target.value = event.target.value.toString().replace(/[^a-zA-Z ]/i, '')
                             setClientData({...clientData, firstName: event.target.value})
                         }
+                        }
+
                     />
                 </Grid>
 
@@ -61,7 +50,6 @@ export default function ClientDetails({clientData, setClientData, error}) {
                         label="Adresa"
                         fullWidth
                         autoComplete="shipping address-line1"
-                        variant="standard"
                         defaultValue={clientData.address}
                         onChange = { (event) =>
                             setClientData({...clientData, address: event.target.value})
@@ -74,10 +62,12 @@ export default function ClientDetails({clientData, setClientData, error}) {
                         label="Oraș"
                         fullWidth
                         autoComplete="shipping address-level2"
-                        variant="standard"
                         defaultValue={clientData.city}
                         onChange = { (event) =>
+                        {
+                            event.target.value = event.target.value.toString().replace(/[^a-zA-Z ]/i, '')
                             setClientData({...clientData, city: event.target.value})
+                        }
                         }
                     />
                 </Grid>
@@ -85,10 +75,11 @@ export default function ClientDetails({clientData, setClientData, error}) {
                     <TextField
                         label="Județ"
                         fullWidth
-                        variant="standard"
                         defaultValue={clientData.county}
-                        onChange = { (event) =>
-                            setClientData({...clientData, country: event.target.value})
+                        onChange = { (event) =>{
+                            event.target.value = event.target.value.toString().replace(/[^a-zA-Z ]/i, '')
+                            setClientData({...clientData, county: event.target.value})
+                        }
                         }
                     />
                 </Grid>
@@ -100,10 +91,11 @@ export default function ClientDetails({clientData, setClientData, error}) {
 
                         label="Telefon"
                         fullWidth
-                        variant="standard"
                         defaultValue={clientData.phone }
-                        onChange = { (event) =>
+                        onChange = { (event) => {
+                            event.target.value = event.target.value.toString().replace(/[^+0-9]/i, '')
                             setClientData({...clientData, phone: event.target.value})
+                            }
                         }
                     />
                 </Grid>
@@ -112,8 +104,8 @@ export default function ClientDetails({clientData, setClientData, error}) {
                     <TextField
                         optional
                         label="E-mail"
+                        type={"email"}
                         fullWidth
-                        variant="standard"
                         defaultValue={clientData.email}
                         onChange = { (event) =>
                             setClientData({...clientData, email: event.target.value})

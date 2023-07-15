@@ -6,7 +6,6 @@ import Navbar from "./components/Navbar";
 import CarEstimate from './components/estimateCreationForm/CarEstimate'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Estimates from './components/Estimates'
-import About from './components/about/About'
 import RootPage from "./components/RootPage";
 import LogIn from "./components/authentification/LogIn";
 import Register from "./components/authentification/Register";
@@ -16,6 +15,7 @@ import PublicRoute from "./components/PublicRoute";
 import  secureLocalStorage  from  "react-secure-storage";
 import {useEffect} from "react";
 import Home from "./components/home/Home";
+import UserProfile from './components/userProfile/UserProfile'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 const router = createBrowserRouter([
@@ -29,7 +29,6 @@ const router = createBrowserRouter([
             },
             {
                 path: "creare-deviz",
-                onLeave: "sigur?",
                 element:  <PrivateRoute component={CarEstimate}></PrivateRoute>
             },
 
@@ -39,12 +38,16 @@ const router = createBrowserRouter([
             },
 
             {
+                path: "profil",
+                element:  <PrivateRoute component={UserProfile}></PrivateRoute>
+            },
+
+            {
                 path: "log-in",
                 element:  <PublicRoute component={LogIn}></PublicRoute>
             },
             {
                 path: "",
-                // element:  <Home />
                 element:  <PublicRoute component={LogIn}></PublicRoute>
             },
 
@@ -61,22 +64,12 @@ const router = createBrowserRouter([
 function App() {
     useEffect(() => {
         secureLocalStorage.setItem("logged-in", false);
-
     }, []);
 
-    const theme = createTheme({
-        typography : {
-            fontFamily: 'Exo 2'
-        }
-    });
-
     return(
-        <ThemeProvider theme={theme}>
-
-            <AuthProvider>
-                    <RouterProvider router={router} />
-            </AuthProvider>
-        </ThemeProvider>
+        <AuthProvider>
+                <RouterProvider router={router} />
+        </AuthProvider>
     )
 
 
