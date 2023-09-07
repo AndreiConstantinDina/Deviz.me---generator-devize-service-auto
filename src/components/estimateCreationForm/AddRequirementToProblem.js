@@ -70,7 +70,7 @@ function AddRequirementToProblem({problemsData, setProblemsData, addProblemLabel
                 <Autocomplete
                     size={'small'}
                     freeSolo
-                    options={['1','2']}
+                    options={[]}
                     sx={{width: '20vw', marginLeft: '3vw'}}
                     value = {problemsDict.find(item => item.key === val).value.newProblem}
                     renderInput={(params) => <TextField{...params} label={addProblemLabel}

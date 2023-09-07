@@ -18,7 +18,6 @@ export default function ServicesList({itemsData, setItemsData, requirementsLabou
         })
         requirementsLabourElements = requirementsLabourElements.flat(1)
 
-        console.log(requirementsLabourElements)
         var items = itemsData.items.slice(0);
         const index = items.indexOf(value)
         if (requirementsLabourElements.includes(itemsData.items[index].item))

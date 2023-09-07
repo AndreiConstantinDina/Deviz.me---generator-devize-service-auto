@@ -11,7 +11,8 @@ import IconButton from "@mui/material/IconButton";
 export default function AddHourlyLabourToRequirement({itemsData, setItemsData,
                                                    addItemLabel, helperText,
                                                    labourData, setLabourData,
-                                                   currentRequirement
+                                                   currentRequirement,
+                                                    hourlyLaboursList, hourlyLabourPrice
                                                }) {
 
     const handleAddNewItem = () => {
@@ -31,7 +32,6 @@ export default function AddHourlyLabourToRequirement({itemsData, setItemsData,
             }
         }
         setItemsData(newItemsData)
-        // de initializat cu elementele existente in lista de manopera. de facut si pentru addlabourtorequirement!!!
         let labours = []
         labourData.items.forEach(element => labours.push(element.item))
 
@@ -44,8 +44,6 @@ export default function AddHourlyLabourToRequirement({itemsData, setItemsData,
             setLabourData([])
             return
         }
-
-
         labours = new Set(labours)
 
         let newLabourData = {
@@ -53,7 +51,6 @@ export default function AddHourlyLabourToRequirement({itemsData, setItemsData,
             newItem: '',
             options: labourData.options
         }
-        // console.log(labourData)
         labours.forEach(element => {
             if (labourData.items.find((el) => el.item === element)) {
                 let newPrice = labourData.items.find((el) => el.item === element).price
@@ -71,21 +68,13 @@ export default function AddHourlyLabourToRequirement({itemsData, setItemsData,
             else
                 newLabourData.items.push({
                     item: element,
-                    price: 0,
+                    price: hourlyLabourPrice,
                     quantity: 1,
                     total: 0
                 })
         })
-
-
-        // console.log(newLabourData)
         setLabourData(newLabourData)
-
-
     }
-
-    //setItemsData({...itemsData, items: items, newItem: ''})
-
 
     return (
         <Grid container spacing={0} direction={'row'} justifyContent={'flex-start' } alignItems={'center'}
@@ -96,7 +85,7 @@ export default function AddHourlyLabourToRequirement({itemsData, setItemsData,
                 <Autocomplete
                     size={'small'}
                     freeSolo
-                    options={[]}
+                    options={hourlyLaboursList !== undefined ? hourlyLaboursList.map(e => e.item) : []}
                     sx={{
                         width: '15vw',
                     }}

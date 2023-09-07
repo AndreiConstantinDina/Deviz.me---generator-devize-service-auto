@@ -6,18 +6,22 @@ import Grid from '@mui/material/Grid';
 import {useState, setState} from "react";
 import AddProblem from './AddProblem'
 import ProblemsList from "./ProblemsList";
+import ServiceRequirementsList from "./ServiceRequirementsList";
+import AddServiceRequirement from "./AddServiceRequirement";
 
-function ProblemsFoundByService({foundProblemsData, setFoundProblemsData, problemsDict, setProblemsDict,otherProblemsData, deletionError, newDeletionError, setNewDeletionError, setDeletionError}) {
+function ProblemsFoundByService({foundProblemsData, setFoundProblemsData, problemsDict, setProblemsDict,otherProblemsData, deletionError, newDeletionError, setNewDeletionError, setDeletionError,
+                                    hourlyLabourData, setHourlyLabourData,
+                                    servicesData, setServicesData}) {
 
     return (
         <React.Fragment>
             <Grid container spacing={2}>
-                <AddProblem problemsData = {foundProblemsData} setProblemsData = {setFoundProblemsData} addProblemLabel = {"Cerință de service"}
-                            helperText = "Cerințe în urma constatării:"
+                <AddServiceRequirement problemsData = {foundProblemsData} setProblemsData = {setFoundProblemsData} addProblemLabel = {"Cerință de service"}
                             problemsDict = {problemsDict} setProblemsDict = {setProblemsDict}
-
+                                       hourlyLabourData={hourlyLabourData} setHourlyLabourData={setHourlyLabourData}
+                                       servicesData={servicesData} setServicesData={setServicesData}
                 >
-                </AddProblem>
+                </AddServiceRequirement>
             </Grid>
 
             <Grid container spacing={1}>
@@ -32,9 +36,11 @@ function ProblemsFoundByService({foundProblemsData, setFoundProblemsData, proble
                                 />
                             </div>
                             :
-                            <ProblemsList problemsData = {foundProblemsData} setProblemsData = {setFoundProblemsData} problemsDict={problemsDict}
-                            otherProblemsData={otherProblemsData} deletionError = {deletionError} setDeletionError = {setDeletionError} newDeletionError = {newDeletionError}  setNewDeletionError = {setNewDeletionError}>
-                            </ProblemsList>
+                            <ServiceRequirementsList problemsData = {foundProblemsData} setProblemsData = {setFoundProblemsData} problemsDict={problemsDict}
+                            otherProblemsData={otherProblemsData} deletionError = {deletionError} setDeletionError = {setDeletionError} newDeletionError = {newDeletionError}  setNewDeletionError = {setNewDeletionError}
+                                hourlyLabourData={hourlyLabourData} setHourlyLabourData={setHourlyLabourData}
+                                servicesData={servicesData} setServicesData={setServicesData}/>
+
                         }
                     </Grid>
                 </Grid>

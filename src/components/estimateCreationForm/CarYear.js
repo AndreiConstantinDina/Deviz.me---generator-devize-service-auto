@@ -7,6 +7,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import {useState, useEffect} from 'react'
 
 import axios from 'axios'
+import {Autocomplete, TextField} from "@mui/material";
 
 
 
@@ -41,19 +42,39 @@ export default function CarYear({carData, setCarData}) {
     return (
         <Box sx={{ minWidth: 120 }}>
             <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">An</InputLabel>
-                <Select
+                <Autocomplete
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={carData.year}
-                    label="an"
-                    onChange={(event) => setCarData ({...carData, year: event.target.value, type: ''})}
-                >
-                    {
-                        carYears.map(item => <MenuItem value={item}>{item}</MenuItem>)
-                    }
+                    options={carYears}
+                    onChange={(event, value) => setCarData ({...carData, year: value, type: ''})}
+                    onSelect = {
+                        (event) => {
+                            setCarData ({...carData, year: event.target.value, type: ''})
+                        }}
 
-                </Select>
+                    renderInput={(params) => <TextField{...params} label={'An'} onChange={
+                        (event) => {
+                            setCarData ({...carData, year: event.target.value, type: ''})
+                        }
+                    }
+                    ></TextField>}
+
+                />
+
+                {/*<InputLabel id="demo-simple-select-label">An</InputLabel>*/}
+                {/*<Select*/}
+                {/*    labelId="demo-simple-select-label"*/}
+                {/*    id="demo-simple-select"*/}
+                {/*    value={carData.year}*/}
+                {/*    label="an"*/}
+                {/*    onChange={(event) => setCarData ({...carData, year: event.target.value, type: ''})}*/}
+                {/*>*/}
+                {/*    {*/}
+                {/*        carYears.map(item => <MenuItem value={item}>{item}</MenuItem>)*/}
+                {/*    }*/}
+
+                {/*</Select>*/}
             </FormControl>
         </Box>
     );

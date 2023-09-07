@@ -7,6 +7,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import {useState, useEffect} from 'react'
 
 import axios from 'axios'
+import {Autocomplete, TextField} from "@mui/material";
 
 
 
@@ -38,19 +39,38 @@ export default function CarModel({carData, setCarData}) {
     return (
         <Box sx={{ minWidth: 120 }}>
             <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Model</InputLabel>
-                <Select
+
+                <Autocomplete
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={carData.model}
-                    label="marca"
-                    onChange={(event) => setCarData ({...carData, model: event.target.value, year: '', type: ''})}
-                >
-                    {
-                        carModels.map(item => <MenuItem value={item}>{item}</MenuItem>)
-                    }
+                    options={carModels}
+                    onChange={(event, value) => setCarData ({...carData, model: value, year: '', type: ''})}
+                    onSelect = {
+                        (event) => {
+                            setCarData ({...carData, model: event.target.value, year: '', type: ''})
+                        }}
 
-                </Select>
+                    renderInput={(params) => <TextField{...params} label={'Model'} onChange={
+                        (event) => {
+                            setCarData ({...carData, model: event.target.value, year: '', type: ''})
+                        }
+                    }
+                    ></TextField>}
+
+                />
+                {/*<Select*/}
+                {/*    labelId="demo-simple-select-label"*/}
+                {/*    id="demo-simple-select"*/}
+                {/*    value={carData.model}*/}
+                {/*    label="marca"*/}
+                {/*    onChange={(event) => setCarData ({...carData, model: event.target.value, year: '', type: ''})}*/}
+                {/*>*/}
+                {/*    {*/}
+                {/*        carModels.map(item => <MenuItem value={item}>{item}</MenuItem>)*/}
+                {/*    }*/}
+
+                {/*</Select>*/}
             </FormControl>
         </Box>
     );

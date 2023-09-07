@@ -166,10 +166,8 @@ export default function EditEstimate({element, step, info, setInfo, save, setSav
             carData.plate = element.carData.plate
         if (clientData.phone === "")
             clientData.phone = element.clientData.phone
-        if (clientData.lastName === "")
-            clientData.lastName = element.clientData.lastName
-        if (clientData.firstName === "")
-            clientData.firstName = element.clientData.firstName
+        if (clientData.name === "")
+            clientData.name = element.clientData.name
 
     }
 
@@ -196,6 +194,8 @@ export default function EditEstimate({element, step, info, setInfo, save, setSav
             case 'serviceRequirements':
                 return <ProblemsFoundByService foundProblemsData = {foundProblemsData} setFoundProblemsData = {setFoundProblemsData} problemsDict={problemsDict} setProblemsDict={setProblemsDict}
                                                otherProblemsData={foundProblemsData} deletionError = {deletionError} setDeletionError = {setDeletionError} newDeletionError = {newDeletionError}  setNewDeletionError = {setNewDeletionError}
+                                               hourlyLabourData={hourlyLabourData} setHourlyLabourData={setHourlyLabourData}
+                                               servicesData={servicesData} setServicesData={setServicesData}
                 />;
             case 'reception':
                 return <VehicleReception receptionData={receptionData} setReceptionData={setReceptionData}/>
@@ -243,7 +243,7 @@ export default function EditEstimate({element, step, info, setInfo, save, setSav
 
         switch (step) {
             case 'client':
-                return clientData.lastName !== "" && clientData.firstName !== "" && clientData.phone !== ""
+                return clientData.name !== "" && clientData.phone !== ""
             case 'car':
                 return carData.plate !== ""
             case 'clientReportedProblems':

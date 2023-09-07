@@ -34,7 +34,7 @@ export default function CarDetails({carData, setCarData, error}) {
             {/*    Introduceți datele mașinii:*/}
 
             {/*</Typography>*/}
-            <Grid container spacing={3}>
+            <Grid container spacing={1}>
                 <Grid item xs={12} md={6}>
                     <TextField
                         required
@@ -71,6 +71,7 @@ export default function CarDetails({carData, setCarData, error}) {
                     />
                 </Grid>
 
+
                 <Grid item xs={12} md={6}>
                    <CarBrand carData={carData} setCarData={setCarData}/>
                 </Grid>
@@ -87,21 +88,6 @@ export default function CarDetails({carData, setCarData, error}) {
                     <CarType carData={carData} setCarData={setCarData}/>
                 </Grid>
 
-                    <Grid item xs={12} md={6}>
-                        <TextField
-                            optional
-                            id="motorCode"
-                            label="Cod Motor"
-                            fullWidth
-                            defaultValue = {carData.motorCode}
-                            onChange={(event) => {
-                                event.target.value = event.target.value.toString().toUpperCase()
-                                setCarData({...carData, motorCode: event.target.value})
-                            }
-
-                        }
-                        />
-                    </Grid>
 
                     <Grid item xs={12} md={6}>
                         <TextField
@@ -116,6 +102,22 @@ export default function CarDetails({carData, setCarData, error}) {
                             }                        }
                         />
                     </Grid>
+                <Grid item xs={12} md={6}>
+                    <TextField
+                        optional
+                        id="motorCode"
+                        label="Cod Motor"
+                        fullWidth
+                        defaultValue = {carData.motorCode}
+                        onChange={(event) => {
+                            event.target.value = event.target.value.toString().toUpperCase()
+                            setCarData({...carData, motorCode: event.target.value})
+                        }
+
+                        }
+                    />
+                </Grid>
+
 
                 <Grid item xs={12} md={6}>
                     <TextField

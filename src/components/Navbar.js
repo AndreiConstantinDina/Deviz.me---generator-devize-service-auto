@@ -80,11 +80,10 @@ function Navbar() {
                     </Box>
                     {
                         currentUser &&
-                        <Link to={"profil"} style={{ textDecoration: 'none' }}>
+                        <Link to={"utilizator"} style={{ textDecoration: 'none' }}>
 
                             <Button
                                 key='profile'
-
                                 sx={{ my: 2, color: 'white', display: 'block' }}
                             >
                                 {currentUser.email}

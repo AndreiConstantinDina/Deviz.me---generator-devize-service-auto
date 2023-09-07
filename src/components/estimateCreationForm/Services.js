@@ -21,6 +21,7 @@ export default function Services({itemsData, setItemsData, addItemLabel, helperT
                 <AddService itemsData = {itemsData} setItemsData = {setItemsData}
                                  addItemLabel={addItemLabel}
                                  helperText = {helperText}
+
                 >
                 </AddService>
             </Grid>

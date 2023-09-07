@@ -9,6 +9,7 @@ import ProblemsFoundByService from "./ProblemsFoundByService";
 import RequirementsList from "./RequirementsList";
 import {useEffect, useState} from "react";
 import AllRequirements from "./AllRequirements";
+import ClientRequirementsList from "./ClientRequirementsList";
 
 export default function RepairRequirements({currentRepairRequirementsTab, setCurrentRepairRequirementsTab,
                                                problemsData, setProblemsData,
@@ -132,7 +133,7 @@ export default function RepairRequirements({currentRepairRequirementsTab, setCur
                                                       deletionError = {deletionError} setDeletionError = {setDeletionError} newDeletionError = {newDeletionError}  setNewDeletionError = {setNewDeletionError}
 
                                     />
-                                    <RequirementsList problemsData={foundProblemsData} setProblemsData={setFoundProblemsData} helperText={"Listă cerințe"}
+                                    <ClientRequirementsList problemsData={foundProblemsData} setProblemsData={setFoundProblemsData} helperText={"Listă cerințe"}
                                                       problemsDict={problemsDict} setProblemsDict={setProblemsDict}
                                                       requirementsHourlyLabourData = {requirementsHourlyLabourData} setRequirementsHourlyLabourData={setRequirementsHourlyLabourData}
                                                       requirementsServicesData={requirementsServicesData} setRequirementsServicesData={setRequirementsServicesData}

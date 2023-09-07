@@ -94,7 +94,7 @@ export default function Labour({currentLabourTab, setCurrentLabourTab, hourlyLab
                     :
                     <div>
                         {currentLabourTab === 0 &&
-                            <Grid item marginTop={'5vh'}>
+                            <Grid item marginTop={'5vh'} sx={{width: '40vw'}}>
                                 <Grid container spacing={0} margin={'5vh'} direction={'column'}>
                                     <Grid item>
                                         <Typography fontSize={'140%'}>Lista lucrărilor în service
@@ -174,7 +174,7 @@ export default function Labour({currentLabourTab, setCurrentLabourTab, hourlyLab
 
 
                                     <Grid container spacing={0} direction={'column'} justifyContent={'flex-end'}
-                                          alignItems={'flex-end'}>
+                                          alignItems={'flex-end'} sx={{width: '60vw'}}>
                                         <Grid item>
                                             <TextField label={labourDiscountType === 'percentage' ? "Discount (procent)" : "Discount (lei)"}
                                                 type={'text'}
@@ -205,10 +205,10 @@ export default function Labour({currentLabourTab, setCurrentLabourTab, hourlyLab
                                             />
                                         </Grid>
 
-                                        <Grid item>
+                                        <Grid item >
 
                                             <Grid container spacing={0} direction={'row'} justifyContent={'flex-end'}
-                                                  alignItems={'flex-end'}>
+                                                  alignItems={'flex-end'} >
                                                 <Grid item>
                                                     <PercentIcon/>
                                                 </Grid>
@@ -237,7 +237,7 @@ export default function Labour({currentLabourTab, setCurrentLabourTab, hourlyLab
                                     </Grid>
                                 </Grid>
 
-                                <Grid container spacing={0} direction={'row'} justifyContent={'flex-end'}>
+                                <Grid container spacing={0} direction={'row'} justifyContent={'flex-end'} sx={{width: '60vw'}}>
 
 
                                     <Grid item>

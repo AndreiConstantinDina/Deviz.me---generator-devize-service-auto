@@ -15,8 +15,11 @@ import PublicRoute from "./components/PublicRoute";
 import  secureLocalStorage  from  "react-secure-storage";
 import {useEffect} from "react";
 import Home from "./components/home/Home";
-import UserProfile from './components/userProfile/UserProfile'
+import UserProfile from './components/dashboard/userProfile/UserProfile'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import Dashboard from './components/dashboard/Dashboard';
+
+
 
 const router = createBrowserRouter([
     {
@@ -41,6 +44,13 @@ const router = createBrowserRouter([
                 path: "profil",
                 element:  <PrivateRoute component={UserProfile}></PrivateRoute>
             },
+
+
+            {
+                path: "utilizator",
+                element:  <PrivateRoute component={Dashboard}></PrivateRoute>
+            },
+
 
             {
                 path: "log-in",

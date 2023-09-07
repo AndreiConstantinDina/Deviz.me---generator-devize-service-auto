@@ -17,7 +17,6 @@ export default function ConfirmDeleteAlert({element, message, setJustRendered, s
             deleteElement(element.id)
         }
         catch(e){
-            console.log(e)
         }
         setOpenParent(false)
     }

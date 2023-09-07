@@ -7,6 +7,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import {useState, useEffect} from 'react'
 
 import axios from 'axios'
+import {Autocomplete, TextField} from "@mui/material";
 
 
 
@@ -45,19 +46,26 @@ export default function CarBrand({carData, setCarData}) {
     return (
         <Box sx={{ minWidth: 120 }}>
             <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Marca</InputLabel>
-                <Select
+                <Autocomplete
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    label="marca"
                     value={carData.brand}
-                    onChange={(event) => setCarData ({...carData, brand: event.target.value, model: '', year: '', type: ''})}
-                >
-                    {
-                        carBrands.map(item => <MenuItem value={item}>{item}</MenuItem>)
-                    }
+                    options={carBrands}
+                    onChange={(event, value) => setCarData ({...carData, brand: value, model: '', year: '', type: ''})}
+                    onSelect = {
+                        (event) => {
+                            setCarData ({...carData, brand: event.target.value, model: '', year: '', type: ''})
+                        }}
 
-                </Select>
+                    renderInput={(params) => <TextField{...params} label={'Marca'} onChange={
+                        (event) => {
+                            setCarData ({...carData, brand: event.target.value, model: '', year: '', type: ''})
+                        }
+                        }
+                        ></TextField>}
+
+                />
+
             </FormControl>
         </Box>
     );

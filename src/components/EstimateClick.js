@@ -16,7 +16,7 @@ import Container from "@mui/material/Container";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from "@mui/icons-material/Delete";
 import DownloadIcon from '@mui/icons-material/Download';
-import {collection, deleteDoc, doc, getDocs} from "@firebase/firestore";
+import {addDoc, collection, deleteDoc, doc, getDocs} from "@firebase/firestore";
 import {useEffect, useState} from "react";
 import {db} from "./authentification/firebase";
 import {useAuth} from "../contexts/AuthContext";
@@ -33,6 +33,9 @@ import {useReactToPrint} from "react-to-print";
 import {useRef} from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import ArchiveIcon from '@mui/icons-material/Archive';
+import ConfirmArchiveAlert from "./alerts/ConfirmArchiveAlert";
+import Stack from "@mui/material/Stack";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -72,7 +75,7 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
     },
 }));
 
-export default function EstimateClick({element, info, setInfo, deleteElement, usersData, URL}) {
+export default function EstimateClick({element, info, setInfo, deleteElement, usersData, URL, archiveElement}) {
     const currentUser = useAuth().currentUser
     const [open, setOpen] = React.useState(false);
     const [edit, setEdit] = React.useState(false)
@@ -81,10 +84,16 @@ export default function EstimateClick({element, info, setInfo, deleteElement, us
     const [showConfirmDialog, setShowConfirmDialog] = React.useState(false)
     const [justRendered, setJustRendered] = React.useState(true)
     const [confirmDelete, setConfirmDelete] = React.useState(false)
+    const [confirmArchive, setConfirmArchive] = React.useState(false)
     const [showConfirmDeleteDialog, setShowConfirmDeleteDialog] = React.useState(false)
+    const [showArchiveDialogue, setShowArchiveDialogue] = React.useState(false)
 
     const handleDelete = () => {
         setShowConfirmDeleteDialog(true)
+    }
+
+    const handleArchive = () => {
+        setShowArchiveDialogue(true)
     }
 
     const handleClickOpen = () => {
@@ -107,6 +116,7 @@ export default function EstimateClick({element, info, setInfo, deleteElement, us
     const editElement = () => {
         setEdit(!edit)
     }
+
 
     const [step, setStep] = React.useState('client');
 
@@ -156,19 +166,44 @@ export default function EstimateClick({element, info, setInfo, deleteElement, us
                 }} onClick={handleClickOpen}
                 >
 
+                    <Grid container
+                          direction="row"
+                          justifyContent="space-between"
+                          alignItems="flex-start"
+                          columns={21}
+                    >
+                        <Grid item xs={10}>
+                            <Typography>
+                                {element.carData.plate}
+                            </Typography>
 
-                    <Typography>
-                        {element.carData.plate}
-                    </Typography>
+                            <Typography>
+                                {element.carData.brand}
+                            </Typography>
 
-                    <Typography>
-                        {element.clientData.lastName} {element.clientData.firstName}
-                    </Typography>
+                            <Typography>
+                                {element.carData.model}
+                            </Typography>
 
+                        </Grid>
 
-                    <Typography>
-                        {element.date}
-                    </Typography>
+                         <Grid item xs={10}>
+                             <Stack direction="column" alignItems="flex-end">
+                                <Typography>
+                                    {element.date}
+                                </Typography>
+
+                                 <Typography >
+                                    {element.clientData.name}
+                                </Typography>
+
+                                <Typography >
+                                    {element.clientData.phone}
+                                </Typography>
+                             </Stack>
+                        </Grid>
+                    </Grid>
+
                 </Paper>
                 </span>
 
@@ -208,10 +243,12 @@ export default function EstimateClick({element, info, setInfo, deleteElement, us
                                     </EditIcon>
                                 </IconButton>
                                 <IconButton>
-                                    <DeleteIcon onClick={() => {
-                                        handleDelete()
-                                    }}>
+                                    <DeleteIcon onClick={handleDelete}>
                                     </DeleteIcon>
+                                </IconButton>
+
+                                <IconButton>
+                                    <ArchiveIcon onClick={handleArchive}/>
                                 </IconButton>
 
 
@@ -227,6 +264,17 @@ export default function EstimateClick({element, info, setInfo, deleteElement, us
                             setOpenParent={setOpen}
                             element = {element}
                         />}
+
+                        {showArchiveDialogue && <ConfirmArchiveAlert
+                            message="Sunteți sigur că doriți să arhivați acest deviz? Acest deviz va putea fi vizualizat și descărcat, dar nu va mai putea fi modificat."
+                            setJustRendered={setJustRendered}
+                            setShowConfirmArchiveDialog={setShowArchiveDialogue}
+                            setConfirmArchive={setConfirmArchive}
+                            archiveElement={archiveElement}
+                            setOpenParent={setOpen}
+                            element = {element}
+                        />}
+
                         <Grid container spacing={2}
                               direction="row"
                               justifyContent="center"
@@ -296,7 +344,7 @@ export default function EstimateClick({element, info, setInfo, deleteElement, us
                     </Typography>
 
                     <Typography>
-                        {element.clientData.lastName} {element.clientData.firstName}
+                        {element.clientData.name}
                     </Typography>
 
 

@@ -73,7 +73,6 @@ const stepsDict = {
     'parts': 'Piese',
     'labour': 'Manopera',
     'recommendations': "Recomandări service",
-
 }
 
 const theme = createTheme();
@@ -84,14 +83,16 @@ export default function CarEstimate() {
     const deviz = collection(db, `${uid}`)
 
     const [clientData, setClientData] = useState({
-        lastName: '',
-        firstName: '',
+        clientType: 'person',
+        name: '',
         email: '',
         phone: '',
         address: '',
-        city: '',
-        county: '',
-        country: 'Romania'
+        company: '',
+        CUI: '',
+        commerceRegistrationNumber: '',
+        bank: '',
+        IBAN: '',
     });
 
     const [carData, setCarData] = useState({
@@ -190,7 +191,7 @@ export default function CarEstimate() {
         //const steps = ['client', 'car', 'problemsDescription', 'serviceRequirements', 'reception', 'repairRequirements', 'parts', 'labour', 'recommendations']
         switch (step) {
             case 'client':
-                return clientData.lastName !== "" && clientData.firstName !== "" && clientData.phone !== ""
+                return clientData.name !== "" && clientData.phone !== ""
             case 'car':
                 return carData.plate !== ""
             case 'problemsDescription':
@@ -213,7 +214,7 @@ export default function CarEstimate() {
     }
 
     const validateEstimate = () => {
-        if ( clientData.lastName === "" || clientData.firstName === "" || clientData.phone === "")
+        if ( clientData.name === "" || clientData.phone === "")
         {
             setError("Datele clientului sunt incomplete")
             setStep("client")
@@ -247,6 +248,8 @@ export default function CarEstimate() {
             case 'serviceRequirements':
                 return <ProblemsFoundByService foundProblemsData = {foundProblemsData} setFoundProblemsData = {setFoundProblemsData} problemsDict={problemsDict} setProblemsDict={setProblemsDict}
                         otherProblemsData={foundProblemsData} deletionError = {deletionError} setDeletionError = {setDeletionError} newDeletionError = {newDeletionError}  setNewDeletionError = {setNewDeletionError}
+                                               hourlyLabourData={hourlyLabourData} setHourlyLabourData={setHourlyLabourData}
+                                               servicesData={servicesData} setServicesData={setServicesData}
                         />;
             case 'reception':
                 return <VehicleReception receptionData={receptionData} setReceptionData={setReceptionData}/>
@@ -321,7 +324,7 @@ export default function CarEstimate() {
             return
 
         try{
-            let date = new Date().getDate().toString() + '/' + new Date().getMonth().toString() + '/' + new Date().getFullYear().toString()
+            let date = new Date().getDate().toString() + '/' + (new Date().getMonth() + 1).toString() + '/' + new Date().getFullYear().toString()
 
             let data = {
                 clientData,

@@ -4,6 +4,9 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
+import {FormGroup, FormControlLabel, Checkbox, RadioGroup, FormControl, FormLabel, Radio} from "@mui/material";
+import Grid from "@mui/material/Grid";
+import {useState} from "react";
 
 export default function ProblemsList({problemsData, setProblemsData, problemsDict, otherProblemsData, deletionError, setDeletionError, newDeletionError, setNewDeletionError}) {
     const handleProblemDelete = (value) => {
@@ -37,6 +40,8 @@ export default function ProblemsList({problemsData, setProblemsData, problemsDic
         }
     }
 
+    const [addLabourType, setAddLabourType] = useState('none')
+
     return (
         <List sx={{ width: '100%',
             maxWidth: 360,
@@ -57,10 +62,12 @@ export default function ProblemsList({problemsData, setProblemsData, problemsDic
                         borderRadius: '5px',
                         margin: '8px',
                         width: '60vw',
-                        paddingLeft: '10px'
+                        paddingLeft: '10px',
+                        minHeight: '60px'
                     }}
                 >
-                    <ListItemText primary={`${value}`} sx={{overflowWrap: 'break-word'}}/>
+                    <ListItemText primary={`${value}`} sx={{overflowWrap: 'break-word', width: '500%'}} />
+
                     <IconButton>
                         <DeleteIcon onClick={() => {handleProblemDelete(value)}}>
                         </DeleteIcon>

@@ -9,7 +9,6 @@ import {useEffect} from "react";
 export default function RequirementsListOfFinalVerifications({problemsData, setProblemsDict, problemsDict, value, labourData, setLabourData}) {
     const handleProblemDelete = (val) => {
         let dict = [...problemsDict]
-        console.log(dict)
         for (let i = 0; i<dict.length; i++) {
             //console.log(elem[1])
             let elem = dict[i]
@@ -18,22 +17,12 @@ export default function RequirementsListOfFinalVerifications({problemsData, setP
                 if (elem.key === value) {
                     const index = elem.value.items.indexOf(val)
                     elem.value.items.splice(index, 1)
-                    // let newLabourData = {
-                    //     items: labourData.items.splice(labourData.items.findIndex((element) => element.item === val), 1),
-                    //     newItem: '',
-                    //     options:[]
-                    // }
                     setProblemsDict(dict)
-                    console.log(labourData)
                     let labourToDelete = labourData.items.find((element) => element.itemName === val).itemName
-                    // console.log('-----')
-                    // console.log(labourToDelete)
-                    // console.log('-----')
                     let numberOfAp = 0
                     for (let elem of dict)
                         if (elem.value.items.findIndex((element) => element === labourToDelete) >= 0)
                             numberOfAp++
-
                     if(numberOfAp === 0)
                         labourData.items.splice(labourData.items.findIndex((element) => element.item === val), 1)
                 }

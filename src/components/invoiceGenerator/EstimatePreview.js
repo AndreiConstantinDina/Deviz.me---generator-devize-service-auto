@@ -123,7 +123,7 @@ export default function EstimatePreview({partsData, carData, problemsData, found
 
     let problemsFoundByService = ''
     foundProblemsData.problems.map((element) => (
-        problemsFoundByService=problemsFoundByService.concat(element, '; ')
+        problemsFoundByService=problemsFoundByService.concat(element.problem, '; ')
     ))
     problemsFoundByService=problemsFoundByService.slice(0,-2)
 
@@ -169,12 +169,10 @@ export default function EstimatePreview({partsData, carData, problemsData, found
                                       direction="row"
                                       justifyContent="space-between"
                                       alignItems="flex-start"
-                                      columns={15}
+                                      columns={21}
                                 >
-                                    <Grid item xs={7}>
-                                        {/*{URL &&*/}
-                                        {/*    <img src={URL} alt="" height={'100%'} width={'50%'} object-fit={'cover'} overflow={'hidden'}/>}*/}
-                                        <Typography fontSize={18}>{usersData.company}</Typography>
+                                    <Grid item xs={7}>{usersData && <div>
+                                        <Typography fontSize={19} fontWeight={630}>{usersData.company}</Typography>
                                         <Typography fontSize={18}>Sediu social: {usersData.address}</Typography>
                                         <Typography fontSize={18}>Punct de lucru: {usersData.workAddress}</Typography>
                                         <Typography fontSize={18}>Reg. Com.: {usersData.comerceRegisterNumber}</Typography>
@@ -182,19 +180,42 @@ export default function EstimatePreview({partsData, carData, problemsData, found
                                         <Typography fontSize={18}>Banca: {usersData.bank}</Typography>
                                         <Typography fontSize={18}>IBAN: {usersData.IBAN}</Typography>
 
+                                    </div>}
+
                                     </Grid>
 
+                                    <Grid item xs = {4.5}>
+                                        {URL &&
+                                            <img src={URL} alt="" height={'100%'} width={'100%'} object-fit={'cover'} overflow={'hidden'}/>}
+
+                                    </Grid>
 
                                     <Grid item xs={7}>
-                                        <Stack direction="column" alignItems="flex-end">
-                                            <Typography fontSize={18}>Nume și prenume: {clientData.lastName} {clientData.firstName}   </Typography>
+
+                                            {clientData.clientType === 'company' &&  <Stack direction="column" alignItems="flex-end">
+                                                <Typography fontSize={18}  fontWeight = {630} >Client: {clientData.company}</Typography>
+                                                {
+                                                    clientData.address && <Typography fontSize={18}>Adresa: {clientData.county} {clientData.city} {clientData.address} </Typography>
+                                                }
+                                                <Typography fontSize={18}>CUI: {clientData.CUI}</Typography>
+                                                <Typography fontSize={18}>Reg. Com.: {clientData.commerceRegistrationNumber}</Typography>
+                                                <Typography fontSize={18}>Banca: {clientData.bank}</Typography>
+                                                <Typography fontSize={18}>IBAN: {clientData.IBAN}</Typography>
+                                                <Typography fontSize={18}>Reprezentant: {clientData.name}  </Typography>
+
+                                                <Typography fontSize={18}>Telefon: {clientData.phone}</Typography>
+                                                {clientData.email && <Typography fontSize={18}>E-mail: {clientData.email}</Typography>}
+                                            </Stack>
+                                            }
+                                        {clientData.clientType === 'person' && <Stack direction="column" alignItems="flex-end">
+                                            <Typography fontSize={19} fontWeight = {630}>Client: {clientData.name}  </Typography>
                                             {
                                                 (clientData.county || clientData.city || clientData.address) && <Typography fontSize={18}>Adresa: {clientData.county} {clientData.city} {clientData.address} </Typography>
                                             }
                                             <Typography fontSize={18}>Telefon: {clientData.phone}</Typography>
                                             {clientData.email && <Typography fontSize={18}>E-mail: {clientData.email}</Typography>}
+                                        </Stack>}
 
-                                        </Stack>
                                     </Grid>
 
                                 </Grid>
